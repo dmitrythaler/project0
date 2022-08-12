@@ -1,0 +1,17 @@
+# This is optimized version for local development
+FROM node:lts-alpine
+LABEL Description="ProjectZero" Author="Dmitry Thaler" Version="3.0"
+
+# you need to use docker-compose.yml to pass these values
+ARG API_PORT WS_PORT DEBUG_PORT
+EXPOSE ${API_PORT} ${WS_PORT} ${DEBUG_PORT}
+
+# Update OS & certificates then clean-up
+RUN apk update && \
+    apk upgrade && \
+    apk --no-cache add ca-certificates && \
+    update-ca-certificates && \
+    rm -fR /var/cache/apk/*
+
+# Set the working dir
+WORKDIR /opt/app

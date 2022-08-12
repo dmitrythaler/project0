@@ -1,0 +1,97 @@
+version: '3.9'
+services:
+  api:
+    restart: on-failure
+    image: p0_api_dev
+    build:
+      context: ../
+      dockerfile: ./tools/Dockerfile.api.dev
+      args: # pass into Dockerfile, ports to expose
+        API_PORT: 3001
+        WS_PORT: 3002
+        DEBUG_PORT: 9228
+    command: ["sh","-c", "yarn api:dev"]
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: development
+      API_PORT: 3001
+      WS_PORT: 3002
+      DEBUG_PORT: 9228
+      LOG: squidex,aws,pub,dal,http
+      AWS_REGION: eu-west-2
+      AWS_BUCKET: project0-content
+      AWS_BUCKET_ROOT_FOLDER: courses
+      # database
+      PGHOST: db
+      PGPORT: 5432
+      PGDATABASE: project0
+      PGUSER: p0
+      # keep values in docker-compose.override.yml
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+      API_PRIVATE_KEY:
+      API_PUBLIC_KEY:
+      PGPASSWORD:
+      SENDGRID_API_KEY:
+
+    ports: #host:#container
+      - 3001:3001
+      - 3002:3002
+      - 9228:9228
+    volumes:
+      # map root dir into container
+      - ../:/opt/app
+
+  frontend:
+    # profiles:
+    #   - fe
+    restart: on-failure
+    image: p0_fe_dev
+    build:
+      context: ../
+      dockerfile: ./tools/Dockerfile.fe.dev
+      args: # pass into Dockerfile, ports to expose
+        PORT: 3000
+    command: ["sh","-c", "yarn fe:dev"]
+    depends_on:
+      - api
+    environment:
+      LOG: fe
+      NODE_ENV: development
+      FE_PORT: 3000
+      API_PORT: 3001
+      WS_PORT: 3002
+
+    ports: #host:#container
+      - 3000:3000
+    volumes:
+      # map root dir into container
+      - ../:/opt/app
+
+  db:
+    restart: on-failure
+    image: p0_db_dev
+    build:
+      context: ../
+      dockerfile: ./tools/Dockerfile.dal
+      args: # pass into Dockerfile, ports to expose
+        PGUSER: p0
+        PGDATABASE: project0
+        # keep values in docker-compose.override.yml
+        PGPASSWORD:
+    environment:
+      PGDATA: /pgdata
+      # keep values in docker-compose.override.yml
+      POSTGRES_PASSWORD:
+    ports: #host:#container
+      - 5432:5432
+    volumes:
+      - postgres_data:/pgdata
+
+volumes:
+  postgres_data:
+
+  # shared yarn cache to speed up installation for the modules
+  # yarn_cache:
+

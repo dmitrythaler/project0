@@ -1,0 +1,23 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules"
+  ],
+  "watch": [
+    "src/**",
+    "../dal/models",
+    "../dal/index.ts",
+    "../common"
+  ],
+  "verbose": true,
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "execMap": {
+    "js": "node --loader ts-node/esm",
+    "ts": "node --loader ts-node/esm",
+    "xx": "ts-node --esm"
+  },
+  "ext": "ts,js,json"
+}

@@ -1,0 +1,10 @@
+FROM postgres:13.3
+RUN apt-get update && apt-get install -y --no-install-recommends postgresql-13-pgaudit
+
+RUN echo "CREATE USER tester WITH ENCRYPTED PASSWORD 'testerwashere' SUPERUSER;" > /docker-entrypoint-initdb.d/create.db.sql
+RUN echo "CREATE DATABASE tests WITH OWNER = tester;" >> /docker-entrypoint-initdb.d/create.db.sql
+RUN echo "GRANT ALL PRIVILEGES ON DATABASE tests TO tester;" >> /docker-entrypoint-initdb.d/create.db.sql
+ENV PGDATA=/postgres
+ENV POSTGRES_PASSWORD=brokenDefib
+CMD ["postgres", "-c", "shared_preload_libraries=pgaudit"]
+

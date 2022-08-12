@@ -1,0 +1,22 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "476380270743.dkr.ecr.eu-west-2.amazonaws.com/project0:latest",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "hostPort": "80",
+      "containerPort": "3000"
+    },
+    {
+      "hostPort": "2083",
+      "containerPort": "3001"
+    },
+    {
+      "hostPort": "2087",
+      "containerPort": "3002"
+    }
+  ],
+  "Logging": "/var/log/nginx"
+}

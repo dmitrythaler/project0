@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "es2020",
+    "moduleResolution": "Node",
+    "strict": true,
+    "sourceMap": true,
+    "experimentalDecorators": false,
+    "emitDecoratorMetadata": false,
+    "declarationMap": true,
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "isolatedModules": true
+  },
+  "exclude": [
+    "node_modules/",
+    "sandbox/",
+    "test/",
+    "dist/"
+  ]
+}

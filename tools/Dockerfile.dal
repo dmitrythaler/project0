@@ -1,0 +1,11 @@
+FROM postgres:13.3
+RUN apt-get update && apt-get install -y --no-install-recommends postgresql-13-pgaudit
+
+ENV PGDATA=/pgdata
+# ENV POSTGRES_PASSWORD=brokenDefib
+ARG PGUSER PGPASSWORD PGDATABASE
+RUN echo "CREATE USER ${PGUSER} WITH ENCRYPTED PASSWORD '${PGPASSWORD}' SUPERUSER;" > /docker-entrypoint-initdb.d/create.db.sql
+RUN echo "CREATE DATABASE ${PGDATABASE} WITH OWNER = ${PGUSER};" >> /docker-entrypoint-initdb.d/create.db.sql
+RUN echo "GRANT ALL PRIVILEGES ON DATABASE ${PGDATABASE} TO ${PGUSER};" >> /docker-entrypoint-initdb.d/create.db.sql
+
+CMD ["postgres", "-c", "shared_preload_libraries=pgaudit"]

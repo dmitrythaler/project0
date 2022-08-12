@@ -1,0 +1,16 @@
+.subtle-border {
+  border-color: var(--subtle-border);
+}
+
+.subtle-shadow {
+  box-shadow: var(--border-glow);
+}
+
+.bg-blurred {
+  backdrop-filter: blur(6px);
+}
+
+.icon {
+  stroke-width: 1.5px;
+  /* color: white; */
+}

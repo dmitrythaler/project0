@@ -1,0 +1,54 @@
+version: '3.9'
+
+volumes:
+  postgres_data:
+services:
+
+  # API
+
+  api:
+    restart: 'no'
+    image: project0:latest
+    ports:
+      - 80:3000
+      - 2083:2083
+      - 2087:2087
+    command: ["sh","-c", "yarn start:prod"]
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: production
+      FE_PORT: 3000
+      API_PORT: 2083
+      WS_PORT: 2087
+      LOG: squidex,aws,pub,dal,http,fe
+      AWS_REGION: eu-west-2
+      AWS_BUCKET: project0-content
+      AWS_BUCKET_ROOT_FOLDER: courses
+      PGHOST: db
+      PGPORT: 5432
+      PGDATABASE: publisher
+      PGUSER: p0
+      # keep values in docker-compose.override.yml
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+      API_PRIVATE_KEY:
+      API_PUBLIC_KEY:
+      PGPASSWORD:
+
+  db:
+    restart: on-failure
+    image: p0_db_dev
+    build:
+      context: ../
+      dockerfile: ./tools/Dockerfile.dal
+      args: # pass into Dockerfile, ports to expose
+        PGUSER: p0
+        PGDATABASE: publisher
+    environment:
+      PGDATA: /pgdata
+    ports: #host:#container
+      - 5432:5432
+    volumes:
+      - postgres_data:/pgdata
+

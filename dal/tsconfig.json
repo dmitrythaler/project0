@@ -1,0 +1,14 @@
+{
+  "extends": "../tools/tsconfig.workspaces.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2020",
+    "rootDir": "./",
+    "outDir": "./dist"
+  },
+  "include": [
+    "./*.ts",
+    "models/",
+    "models/**/*.json"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "project-zero-boilerplate",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "ProjectZero",
+  "private": true,
+  "author": "Dmitry Thaler <dmitry@thaler.dev>",
+  "license": "MIT",
+  "scripts": {
+    "up": "docker-compose -f tools/docker-compose.dev.yml -f tools/docker-compose.override.yml -p p0 up --build",
+    "build": "docker-compose -f tools/docker-compose.dev.yml -f tools/docker-compose.override.yml -p p0 up --build -d",
+    "start": "docker-compose -p p0 start",
+    "stop": "docker-compose -p p0 stop",
+    "restart": "docker-compose -p p0 restart",
+    "logs": "docker-compose -p p0 logs -f -t --tail=50",
+    "ps": "docker-compose -p p0 ps --all",
+    "ps:images": "docker image ls -f reference=\"p0*\"",
+    "clean:modules": "rm yarn.lock yarn-error.log && find . -maxdepth 2 -type d -name node_modules -exec sudo rm -rf \"{}\" \\;",
+    "clean:c": "docker rm -v $(docker ps -aqf name=p0\\*); docker volume prune -f",
+    "clean:c:i": "yarn clean:c; docker image prune -f && docker image rm -f $(docker image ls -f reference=\"p0*\" --format {{.ID}})",
+    "ts:build": "tsc --build --force tools/tsconfig.build.json",
+    "ts:clean": "rm -rf common/dist api/dist dal/dist && find . -name \"*.tsbuildinfo\" -delete",
+    "image:build": "./tools/1.0.build.docker.image.sh",
+    "image:preview": "docker-compose -f tools/docker-compose.yml -f tools/docker-compose.override.yml -p p0_preview up",
+    "image:stop": "docker-compose -p p0_preview stop",
+    "image:push": "./tools/1.1.push.docker.image.sh",
+    "deploy": "./tools/1.2.deploy.eb.sh",
+    "start:prod": "concurrently \"yarn api:start\" \"yarn fe:start\"",
+    "api:dev": "yarn workspace @p0/api dev",
+    "api:start": "yarn workspace @p0/api start",
+    "fe:dev": "yarn workspace @p0/fe dev",
+    "fe:start": "yarn workspace @p0/fe start"
+  },
+  "dependencies": {
+    "lean-pg-migrate": "0.8.2"
+  },
+  "devDependencies": {},
+  "workspaces": [
+    "api",
+    "dal",
+    "common",
+    "frontend"
+  ]
+}

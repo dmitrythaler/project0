@@ -1,0 +1,19 @@
+{
+  "extends": "../tools/tsconfig.workspaces.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./dist",
+    "rootDir": "./",
+  },
+  "references": [
+    {
+      "path": "../common/tsconfig.build.json"
+    }
+  ],
+  "include": [
+    "./index.ts",
+    "./db.ts",
+    "models/",
+    "models/**/*.json"
+  ]
+}
