@@ -1,8 +1,8 @@
-// trx - pg-promise's transaction
+// sql - transaction from Postgres.js
+// please refer to https://github.com/porsager/postgres
 
-export const up = async function(trx) {
-  return await trx.none(
-    `
+export const up = async function(sql) {
+  return await sql`
     CREATE TABLE "public"."course" (
       "uuid" uuid PRIMARY KEY default gen_random_uuid(),
       "name" TEXT NOT NULL,
@@ -16,15 +16,13 @@ export const up = async function(trx) {
       "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
       "updated_at" TIMESTAMP WITH TIME ZONE NULL,
       CONSTRAINT uq_course_name UNIQUE(name)
-    );`
-  )
+    );
+  `
 }
 
-export const down = async function(trx) {
-  return await trx.none(
-    `
+export const down = async function(sql) {
+  return await sql`
     DROP TABLE "public"."course";
-    `
-  )
+  `
 }
 

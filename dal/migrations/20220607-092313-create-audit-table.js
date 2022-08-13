@@ -1,10 +1,8 @@
+// sql - transaction from Postgres.js
+// please refer to https://github.com/porsager/postgres
 
-// trx - pg-promise's transaction/task (ITask<{}>)
-// please refer to https://vitaly-t.github.io/pg-promise/Task.html
-
-export const up = async function(trx) {
-  return await trx.none(
-    `
+export const up = async function(sql) {
+  return await sql`
     CREATE TYPE "public"."action_type" AS enum (
       'create',
       'publish',
@@ -25,16 +23,14 @@ export const up = async function(trx) {
       "subject_id" uuid NOT NULL,
       "data" json NULL,
       CONSTRAINT fk_audit_user_uuid FOREIGN KEY(actor_id) REFERENCES "public"."user"(uuid) ON DELETE NO ACTION
-    );`
-  )
+    );
+  `
 }
 
-export const down = async function (trx) {
-  return await trx.none(
-    `
+export const down = async function(sql) {
+  return await sql`
     DROP TABLE "public"."audit";
     DROP TYPE IF EXISTS "public"."subject_type";
     DROP TYPE IF EXISTS "public"."action_type";
-    `
-  )
+  `
 }

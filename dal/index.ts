@@ -64,7 +64,7 @@ try {
 
   Migration.initialize({
       ...config,
-      migrationsDir: 'migrations',
+      migrationsDir: './migrations',
       silent: false
     })
     .then(mg => mg.up().then(() => mg.end()))
