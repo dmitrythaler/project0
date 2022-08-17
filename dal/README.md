@@ -1,6 +1,6 @@
-# Project 0, DAL
+# Project 0, DAL Workspace
 
-Multi container base dev environment, Data Access Layer
+Data Access Layer
 
 
 

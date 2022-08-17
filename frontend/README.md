@@ -1,10 +1,9 @@
-## React+Redux+Tailwind+Vite boilerplate
+# Project Zero, Frontend Workspace
 
 #### Vite
 * ...
 
 #### Code
-* Simple but well structured application with theme switching and basic messaging;
 * React, Hooks, Redux, Thunk(Async Redux), Tailwind CSS.
 
 #### TODO

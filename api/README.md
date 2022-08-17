@@ -1,3 +1,3 @@
-# ProjectZero, API
+# Project Zero, API Workspace
 
-ProjectZero, main API part
+Project Zero, main API part
