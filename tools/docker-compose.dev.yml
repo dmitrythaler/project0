@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   api:
-    restart: on-failure
+    restart: 'no'
     image: p0_api_dev
     build:
       context: ../
@@ -32,6 +32,7 @@ services:
       AWS_SECRET_ACCESS_KEY:
       API_PRIVATE_KEY:
       API_PUBLIC_KEY:
+      AUTH_EXP_SEC: 3600
       PGPASSWORD:
       SENDGRID_API_KEY:
 
@@ -44,9 +45,9 @@ services:
       - ../:/opt/app
 
   frontend:
-    # profiles:
-    #   - fe
-    restart: on-failure
+    profiles:
+      - fe
+    restart: 'no'
     image: p0_fe_dev
     build:
       context: ../
@@ -70,7 +71,7 @@ services:
       - ../:/opt/app
 
   db:
-    restart: on-failure
+    restart: 'no'
     image: p0_db_dev
     build:
       context: ../

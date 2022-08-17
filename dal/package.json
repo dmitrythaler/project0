@@ -13,7 +13,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "lint": "eslint ./ --ext .ts",
-    "migrate:dev": "lpgm -H localhost -D publisher -U p0 -W p0",
+    "migrate:dev": "lpgm -H localhost -D project0 -U p0 -W p0",
     "migrate": "lpgm up",
     "test:db:setup": "docker build -t test-image-pg -f ./tools/Dockerfile.test ./tools/",
     "test:db:start": "docker run -p 5432:5432 --name test-pg --rm -d test-image-pg:latest",

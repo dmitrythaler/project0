@@ -1,3 +1,6 @@
+import path from 'node:path'
+import { fileURLToPath } from 'url'
+
 import postgres from 'postgres'
 import { APIError } from '@p0/common'
 import { Migration } from 'lean-pg-migrate'
@@ -36,25 +39,18 @@ export {
 
 //  ----------------------------------------------------------------------------------------------//
 
-const {
-  USER,
-  PGHOST,
-  PGPORT,
-  PGDATABASE,
-  PGUSER,
-  PGPASSWORD
-} = process.env
 
-let sql
-let config
-let userDAL: UserDAL<Sql>
-let courseDAL: CourseDAL<Sql>
-let auditDAL: AuditDAL<Sql>
-let updateRuleDAL: UpdateRuleDAL<Sql>
-let configDAL: ConfigDAL<Sql>
+export const initDAL = async () => {
+  const {
+    USER,
+    PGHOST,
+    PGPORT,
+    PGDATABASE,
+    PGUSER,
+    PGPASSWORD
+  } = process.env
 
-try {
-  config = {
+  const config = {
     database: PGDATABASE || USER,
     host: PGHOST || 'localhost',
     port: parseFloat(PGPORT || '') || 5432,
@@ -62,31 +58,63 @@ try {
     password: PGPASSWORD,
   }
 
-  Migration.initialize({
+  let sql
+  let userDAL: UserDAL<Sql>
+  let courseDAL: CourseDAL<Sql>
+  let auditDAL: AuditDAL<Sql>
+  let updateRuleDAL: UpdateRuleDAL<Sql>
+  let configDAL: ConfigDAL<Sql>
+
+  const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+  try {
+
+    // run migrations before DAL init
+    const mg = await Migration.initialize({
       ...config,
-      migrationsDir: './migrations',
+      migrationsDir: path.join(__dirname, './migrations'),
       silent: false
     })
-    .then(mg => mg.up().then(() => mg.end()))
-    .catch(err => {
-      throw new APIError(err, 'Migration error')
+    await mg.up()
+    await mg.end()
+
+    // here we go
+    sql = postgres({
+      ...config,
+      idle_timeout: 30,
+      max: 10
     })
 
-  sql = postgres({
-    ...config,
-    idle_timeout: 30,
-    max: 10
-  })
+    userDAL = new UserDAL<Sql>(sql)
+    courseDAL = new CourseDAL<Sql>(sql)
+    auditDAL = new AuditDAL<Sql>(sql)
+    updateRuleDAL = new UpdateRuleDAL<Sql>(sql)
+    configDAL = new ConfigDAL<Sql>(sql)
 
-  userDAL = new UserDAL<Sql>(sql)
-  courseDAL = new CourseDAL<Sql>(sql)
-  auditDAL = new AuditDAL<Sql>(sql)
-  updateRuleDAL = new UpdateRuleDAL<Sql>(sql)
-  configDAL = new ConfigDAL<Sql>(sql)
+    return {
+      sql,
+      config,
+      userDAL,
+      courseDAL,
+      auditDAL,
+      updateRuleDAL,
+      configDAL
+    }
 
-} catch (err) {
-  throw new APIError(err as Error, 'DB access init error')
+  } catch (err) {
+      throw new APIError(<Error>err, 'DAL initialization error')
+  }
 }
+
+const {
+  sql,
+  config,
+  userDAL,
+  courseDAL,
+  auditDAL,
+  updateRuleDAL,
+  configDAL
+} = await initDAL()
 
 export {
   sql,

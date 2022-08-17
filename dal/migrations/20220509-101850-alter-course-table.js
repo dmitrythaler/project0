@@ -2,8 +2,10 @@
 // please refer to https://github.com/porsager/postgres
 
 export const up = async function(sql) {
-  return await sql`
+  await sql`
     CREATE TYPE "public"."squidex_auth_enum" as enum ('GREEN', 'YELLOW', 'RED');
+  `
+  return await sql`
     ALTER TABLE "public"."course"
       DROP COLUMN "template",
       ADD COLUMN "since_published" json NULL,

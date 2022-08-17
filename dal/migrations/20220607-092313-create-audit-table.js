@@ -2,7 +2,7 @@
 // please refer to https://github.com/porsager/postgres
 
 export const up = async function(sql) {
-  return await sql`
+  await sql`
     CREATE TYPE "public"."action_type" AS enum (
       'create',
       'publish',
@@ -10,10 +10,14 @@ export const up = async function(sql) {
       'update',
       'delete'
     );
+  `
+  await sql`
     CREATE TYPE "public"."subject_type" AS enum (
       'user',
       'course'
     );
+  `
+  return await sql`
     CREATE TABLE "public"."audit" (
       "uuid" uuid PRIMARY KEY default gen_random_uuid(),
       "taken_on" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

@@ -5305,7 +5305,7 @@ lean-logger@^3.2.2:
   resolved "https://registry.yarnpkg.com/lean-logger/-/lean-logger-3.2.2.tgz#53555dc25e78316e62c8f951b8b26c2189e44885"
   integrity sha512-+2LTZeJhCEjOty404Jw6duIAsxCKTtrcDA2rYEUZYqu8nCEsA3PpmA1xlO8lVGG+aEcUHxwpcvQO8VYs7cVJ1g==
 
-lean-pg-migrate@0.8.2, lean-pg-migrate@^0.8.2:
+lean-pg-migrate@^0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/lean-pg-migrate/-/lean-pg-migrate-0.8.2.tgz#f322f34f3aa1876f7acdfc4b6b85bd1970593f6a"
   integrity sha512-PvkD+xUJ9i7Ahh46By8/fo48WslztmRZt9Yahqm8mrMZZZSEAko8Ix1mfAZX5QhJST/KSa5yVpglF01Xp7Oi+A==

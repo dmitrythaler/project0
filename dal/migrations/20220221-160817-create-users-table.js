@@ -2,7 +2,8 @@
 // please refer to https://github.com/porsager/postgres
 
 export const up = async function(sql) {
-  return await sql`
+
+  await sql`
     CREATE TYPE "public"."user_role" AS enum (
       'admin',
       'user',
@@ -10,7 +11,9 @@ export const up = async function(sql) {
       'manager',
       'zombie'
     );
+  `
 
+  await sql`
     CREATE TABLE "public"."user" (
       "uuid" uuid PRIMARY KEY default gen_random_uuid(),
       "email" TEXT,
@@ -24,11 +27,12 @@ export const up = async function(sql) {
       "last_login" TIMESTAMP WITH TIME ZONE NULL,
       CONSTRAINT uq_user_email UNIQUE(email)
     );
-
+  `
+  await sql`
     INSERT INTO "public"."user"
       (email, last_name, first_name, password, is_active, role)
     VALUES
-      ('root@domain.lan', 'Admin', 'Joe', '', 1, 'admin');
+      ('root@domain.lan', 'Admin', 'Joe', '', true, 'admin');
   `
 }
 

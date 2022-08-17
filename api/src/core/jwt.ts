@@ -7,7 +7,7 @@ const {
 } = process.env
 
 const jwt = new JWTRig({
-  expSec: parseFloat(AUTH_EXP_SEC || '0') || 3600,
+  expSec: parseFloat(AUTH_EXP_SEC || '3600'),
   privateKey: API_PRIVATE_KEY || '',
   publicKey: API_PUBLIC_KEY || ''
 })

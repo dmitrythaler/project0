@@ -1,5 +1,5 @@
-import path from 'path'
-import dotenv from 'dotenv'
+// import path from 'path'
+// import dotenv from 'dotenv'
 
 const {
   NODE_ENV,
@@ -15,9 +15,9 @@ const host = HOST || 'localhost'
 const port: number = parseFloat(API_PORT || PORT || '3001')
 const wsPort: number = parseFloat(WS_PORT || '0') || port + 1
 
-dotenv.config({
-  path: path.resolve(process.cwd(), `.env.${nodeEnv}`)
-})
+// dotenv.config({
+//   path: path.resolve(process.cwd(), `.env.${nodeEnv}`)
+// })
 
 export const config = {
   env: nodeEnv,
