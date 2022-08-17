@@ -32,7 +32,7 @@ export const up = async function(sql) {
     INSERT INTO "public"."user"
       (email, last_name, first_name, password, is_active, role)
     VALUES
-      ('root@domain.lan', 'Admin', 'Joe', '', true, 'admin');
+      ('root@domain.lan', 'Admin', 'Joe', '$2b$12$AlDaZ48.zr0gFDagbMb77eF17P3v3yQ..CrAf6CTusqKamSE6vPGS', true, 'admin');
   `
 }
 
