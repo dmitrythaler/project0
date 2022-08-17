@@ -2,7 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'url'
 
 import postgres from 'postgres'
-import { APIError } from '@p0/common'
+import { APIError, logger } from '@p0/common'
 import { Migration } from 'lean-pg-migrate'
 
 import { UserDAL, UserRole } from './models/user.js'
@@ -73,7 +73,8 @@ export const initDAL = async () => {
     const mg = await Migration.initialize({
       ...config,
       migrationsDir: path.join(__dirname, './migrations'),
-      silent: false
+      logger: logger.dal,
+      errorLogger: logger.error
     })
     await mg.up()
     await mg.end()

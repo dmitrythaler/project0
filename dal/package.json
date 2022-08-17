@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@p0/common": "1.0.0",
-    "lean-pg-migrate": "^0.8.2",
+    "lean-pg-migrate": "^0.9.1",
     "postgres": "^3.0.6"
   },
   "devDependencies": {
