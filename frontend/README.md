@@ -4,7 +4,11 @@
 * ...
 
 #### Code
-* React, Hooks, Redux, Thunk(Async Redux), Tailwind CSS.
+* React
+* Hooks
+* Redux
+* Thunk(Async Redux)
+* Tailwind CSS.
 
 #### TODO
 * Testing

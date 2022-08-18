@@ -11,9 +11,15 @@ This is a demo/boiler-plate started as a spin-off of my recent project.
 
 ### Workspaces
 
-`yarn workspaces info` shows us this project's structure:
+The project consists of 4 worspaces:
+* `@p0/common` contains a code and type definistions shared between all parts of the project;
+* `@p0/dal` is a Data Access Layer - database access, models and entities definistions;
+* `@p0/api` ia a main API;
+* `@p0/fe` is a frontend part;
+
 
 ```
+# yarn workspaces info
 {
   "@p0/api": {
     "location": "api",
@@ -44,10 +50,5 @@ This is a demo/boiler-plate started as a spin-off of my recent project.
   }
 }
 ```
-* `@p0/common` contains a code shared between all parts of the project;
-* `@p0/dal` is a Data Access Layer - database access, models and entities;
-* `@p0/api` ia a main API;
-* `@p0/fe` is a frontend part;
-
 
 
