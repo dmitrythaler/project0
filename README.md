@@ -5,9 +5,9 @@ This is a demo/boiler-plate started as a spin-off of my recent project.
 
 ## Code
 
-* Typescript
 * Yarn workspaces
 * Monorepo
+* Typescript
 
 ### Workspaces
 
@@ -50,5 +50,10 @@ The project consists of 4 worspaces:
   }
 }
 ```
+
+## Typescript
+
+
+## Dev-ops infrastructure
 
 
