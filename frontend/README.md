@@ -1,14 +1,14 @@
 # Project Zero, Frontend Workspace
 
-#### Vite
-* ...
-
 #### Code
 * React
 * Hooks
 * Redux
 * Thunk(Async Redux)
 * Tailwind CSS.
+
+#### Bundling
+* Vite
 
 #### TODO
 * Testing
