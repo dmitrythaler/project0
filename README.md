@@ -12,9 +12,9 @@ This is a demo/boiler-plate started as a spin-off of my recent project.
 ### Workspaces
 
 The project consists of 4 worspaces:
-* `@p0/common` contains a code and type definistions shared between all parts of the project;
+* `@p0/common` contains a code and type definitions shared between all parts of the project;
 * `@p0/dal` is a Data Access Layer - database access, models and entities definistions;
-* `@p0/api` ia a main API;
+* `@p0/api` is a main API;
 * `@p0/fe` is a frontend part;
 
 
@@ -60,4 +60,13 @@ Take a look at `tools/tsconfig.build.json` and `tools/tsconfig.workspaces.json`.
 The `tools/` folder contains
 The docker config files for the dev and production environments, EBS configs for deployment and scripts to create/update AWS/EBS infra to deply to. It also contains generated ECDSA key pairs for auth and TS dev/prod configs.
 
+## Install and run
+
+Run from console:
+```
+# git clone git@github.com:dmitrythaler/project0.git
+# yarn
+# yarn up
+```
+Then open http://localhost:3000 in your browser and login as `root@domain.lan` with `********` password (yes, exactly).
 
