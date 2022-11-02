@@ -14,10 +14,7 @@
   "env": {
     "NODE_ENV": "development"
   },
-  "execMap": {
-    "js": "node --loader ts-node/esm",
-    "ts": "node --loader ts-node/esm",
-    "xx": "ts-node --esm"
-  },
-  "ext": "ts,js,json"
+  "ext": "ts,js,json",
+  "exec": "node --experimental-loader esbuild-node-loader",
+  "legacyWatch": true
 }

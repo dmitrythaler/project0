@@ -1,6 +1,9 @@
 version: '3.9'
 services:
   api:
+    profiles:
+      - full
+      - only-api
     restart: 'no'
     image: p0_api_dev
     build:
@@ -46,7 +49,7 @@ services:
 
   frontend:
     profiles:
-      - fe
+      - full
     restart: 'no'
     image: p0_fe_dev
     build:

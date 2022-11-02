@@ -7,8 +7,9 @@
   "author": "Dmitry Thaler <dmitry@thaler.dev>",
   "license": "MIT",
   "scripts": {
-    "up": "docker-compose --profile fe -f tools/docker-compose.dev.yml -f tools/docker-compose.override.yml -p p0 up --build",
-    "up:api": "docker-compose -f tools/docker-compose.dev.yml -f tools/docker-compose.override.yml -p p0 up --build",
+    "up": "docker-compose --profile full -f tools/docker-compose.dev.yml -f tools/docker-compose.override.yml -p p0 up --build",
+    "up:api": "docker-compose --profile only-api -f tools/docker-compose.dev.yml -f tools/docker-compose.override.yml -p p0 up --build",
+    "up:db": "docker-compose --profile only-db -f tools/docker-compose.dev.yml -f tools/docker-compose.override.yml -p p0 up --build",
     "build": "docker-compose -f tools/docker-compose.dev.yml -f tools/docker-compose.override.yml -p p0 up --build -d",
     "start": "docker-compose -p p0 start",
     "stop": "docker-compose -p p0 stop",
@@ -32,8 +33,6 @@
     "fe:dev": "yarn workspace @p0/fe dev",
     "fe:start": "yarn workspace @p0/fe start"
   },
-  "dependencies": {},
-  "devDependencies": {},
   "workspaces": [
     "api",
     "dal",
