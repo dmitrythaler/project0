@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.workspaces.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "./",
+    "outDir": "./dist"
+  },
+  "include": [
+    "./"
+  ],
+  "exclude": [
+    "node_modules/",
+    "sandbox/",
+    "test/",
+    "dist/"
+  ]
+}

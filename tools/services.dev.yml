@@ -1,0 +1,106 @@
+version: '3.9'
+services:
+  api:
+    profiles:
+      - all
+      - api
+    restart: 'no'
+    image: p0_api_dev
+    build:
+      context: ../
+      dockerfile: ./tools/Dockerfile.api.dev
+      args: # pass into Dockerfile, ports to expose
+        API_PORT: ${API_PORT}
+        WS_PORT: ${WS_PORT}
+        DEBUG_PORT: ${DEBUG_PORT}
+    # command: "yarn @api start"
+    command: "yarn @api dev"
+    depends_on:
+      - mongo
+      - storage
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      API_PORT: ${API_PORT}
+      WS_PORT: ${WS_PORT}
+      DEBUG_PORT: ${DEBUG_PORT}
+      LOG: dal,http,wss
+      MINIO_ENDPOINT: storage
+      MINIO_REGION: eu-west-2
+      MINIO_BUCKET: 'hungrybiker'
+      MINIO_ROOT_USER: root
+      MINIO_ROOT_PASSWORD:
+      # database
+      DB_HOST: mongo
+      DB_PORT: ${DB_PORT}
+      DB_NAME: project-zero
+      # keep values in secrets.dev.yml
+      API_PRIVATE_KEY:
+      API_PUBLIC_KEY:
+      # no API_SECRET_KEY - cookies shouldbn't be encrypted
+      AUTH_EXP_SEC: 3600
+
+    ports: #host:#container
+      - ${API_PORT}:${API_PORT}
+      - ${WS_PORT}:${WS_PORT}
+      - ${DEBUG_PORT}:${DEBUG_PORT}
+    volumes:
+      # map root dir into container
+      - ../:/opt/app
+
+  frontend:
+    profiles:
+      - all
+    restart: 'no'
+    image: p0_fe_dev
+    build:
+      context: ../
+      dockerfile: ./tools/Dockerfile.fe.dev
+      args: # pass into Dockerfile, ports to expose
+        PORT: ${FE_PORT}
+    command: "yarn @fe dev"
+    depends_on:
+      - api
+    environment:
+      LOG: fe
+      NODE_ENV: ${NODE_ENV}
+      FE_PORT: ${FE_PORT}
+      API_PORT: ${API_PORT}
+      WS_PORT: ${WS_PORT}
+    ports: #host:#container
+      - ${FE_PORT}:${FE_PORT}
+    volumes:
+      # map root dir into container
+      - ../:/opt/app
+
+  mongo:
+    profiles:
+      - mongo
+      - api
+      - all
+    image: mongo
+    restart: always
+    # volumes:
+    #   - mongo_data:/data
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+
+  storage:
+    profiles:
+      - storage
+      - api
+      - all
+    image: minio/minio
+    restart: on-failure
+    command: server --console-address ":9090"
+    environment:
+      MINIO_ROOT_USER: root
+      MINIO_ROOT_PASSWORD:
+      MINIO_VOLUMES: /data
+    ports:
+      - 9000:9000
+      - 9090:9090
+    volumes:
+      - storage_data:/data
+
+volumes:
+  storage_data:

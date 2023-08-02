@@ -1,0 +1,7 @@
+table {
+  color: var(--text-main);
+}
+
+.action {
+  @apply w-10 h-10 p-1 hover:text-accent inline-block;
+}

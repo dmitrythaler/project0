@@ -1,0 +1,46 @@
+{
+  "extends": "../tsconfig.workspaces.json",
+  "compilerOptions": {
+    // "target": "es2022",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "useDefineForClassFields": true,
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@common/*": ["./src/common/*"],
+      "@common": ["./src/common"],
+      "@components/*": ["./src/components/*"],
+      "@components": ["./src/components"],
+      "@containers/*": ["./src/containers/*"],
+      "@containers": ["./src/containers"],
+      "@storage/*": ["./src/storage/*"],
+      "@storage": ["./src/storage"],
+      "@assets/*": ["./src/assets/*"],
+      "@assets": ["./src/assets"],
+    },
+  },
+  "references-does-not-work": [
+    {
+      "path": "../common/tsconfig.build.json"
+    }
+  ],
+  "include": [
+    "./src/",
+    "./src/**/*.ts",
+    "./src/**/*.js",
+    "./src/**/*.json"
+  ],
+  "exclude": [
+    "node_modules/",
+    "sandbox/",
+    "test/",
+    "dist/"
+  ]
+}

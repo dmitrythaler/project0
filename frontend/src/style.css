@@ -1,0 +1,34 @@
+/* css variables */
+@import "styles/_variables.css";
+@import "tailwindcss/base";
+
+/* custom base styles */
+@import "styles/aux.css";
+@import "styles/fonts.css";
+@import "styles/typography.css";
+@import "styles/buttons.css";
+@import "styles/forms.css";
+
+@import "tailwindcss/components";
+/* custom components */
+
+@import "tailwindcss/utilities";
+/* custom utils */
+
+/*  ********************************/
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0.25rem 1rem 1rem 8rem;
+  background-color: var(--bg-transparent);
+  background-image: url('@assets/bg/white_wall2_@2X.jpg');
+  background-repeat: repeat;
+  background-blend-mode: multiply;
+  color: var(--text-main);
+}
+
+/* background-blend-mode: soft-light; */
+/* background-image: url('assets/bg/grunge_wall.png'); */
+/* background-image: url('assets/bg/concrete_wall_2_@2X.png'); */

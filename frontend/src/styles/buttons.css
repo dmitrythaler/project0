@@ -1,0 +1,37 @@
+.btn {
+  @apply rounded shadow py-2 px-6;
+  /* border: 1px solid var(--subtle-border); */
+  box-shadow: var(--border-glow);
+  color: var(--color-default-text);
+  background-color: var(--color-default);
+}
+
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+.btn:focus, .btn:active, btn:hover {
+  outline-width: 0;
+}
+
+.btn:hover {
+  @apply border-transparent;
+  background-color: var(--color-default-light);
+}
+
+.btn-inverted {
+  color: var(--color-inverted-text);
+  background-color: var(--color-inverted);
+}
+.btn-inverted:hover {
+  background-color: var(--color-inverted-light);
+}
+
+.btn-accent {
+  @apply bg-accent-dark;
+  color: var(--color-accent-text);
+}
+.btn-accent:hover {
+  background-color: var(--color-accent);
+}

@@ -1,0 +1,59 @@
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  /* background: rgba(0,0,0,0.1); */
+  background: hsla(0, 0%, 100%, 0.3);
+  color: inherit;
+  backdrop-filter: blur(2px);
+  z-index: 20;
+}
+
+.modal-main {
+  @apply text-lg;
+
+  background-color: var(--bg-transparent);
+  background-image: url('@assets/bg/white_wall2_@2X.jpg');
+  background-repeat: repeat;
+  background-blend-mode: multiply;
+
+  width: 50%;
+  min-width: 32rem;
+  max-width: 64rem;
+
+  border: 1px solid var(--subtle-border);
+  box-shadow: var(--border-glow);
+  border-radius: 0.5rem;
+  /* backdrop-filter: blur(6px); */
+  overflow: hidden;
+  color: inherit;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.modal-main.mini {
+  width: 30rem;
+  min-width: 24rem;
+  max-width: 48rem;
+}
+
+.modal-main.bigger {
+  width: 70%;
+  max-width: 70%;
+}
+
+.modal-header {
+  @apply flex flex-row justify-between items-center border-b border-accent px-5 py-4;
+}
+
+.modal-footer {
+  @apply flex flex-row justify-end items-center border-t border-neutral-500/50 px-5 py-4;
+}
+
+.modal-body {
+  @apply py-6 px-5;
+}
+

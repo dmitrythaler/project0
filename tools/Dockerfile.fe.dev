@@ -1,0 +1,21 @@
+FROM node:lts-alpine
+LABEL Description="Project0 F/E container" Author="Dmitry Thaler" Version="3.0"
+
+# you need to use docker-compose.yml to pass the value
+ARG PORT
+EXPOSE ${PORT}
+
+# Update OS & certificates, install build tools and clean-up apk cache
+RUN apk update && \
+    apk upgrade && \
+    apk --no-cache add ca-certificates && \
+    update-ca-certificates && \
+    apk add --no-cache --update python3 zlib autoconf build-base optipng nasm libtool g++ make libpng-dev libc6-compat automake && \
+    rm -fR /var/cache/apk/*
+
+# Create the working dir
+RUN mkdir -p /opt/app
+
+# Set the working dir
+WORKDIR /opt/app
+

@@ -1,0 +1,25 @@
+{
+  "extends": "../tsconfig.workspaces.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "./",
+    "outDir": "./dist",
+  },
+  "references-does-not-work": [
+    {
+      "path": "../common/tsconfig.json"
+    }
+  ],
+  "include": [
+    "./index.ts",
+    "./db.ts",
+    "models/",
+    "models/**/*.json"
+  ],
+  "exclude": [
+    "node_modules/",
+    "sandbox/",
+    "test/",
+    "dist/"
+  ]
+}

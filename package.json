@@ -1,0 +1,43 @@
+{
+  "name": "project0",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Project Zero boilerplate",
+  "private": true,
+  "author": "Dmitry Thaler <dmitry@thaler.dev>",
+  "license": "MIT",
+  "scripts": {
+    "@common": "yarn workspace @p0/common",
+    "@dal": "yarn workspace @p0/dal",
+    "@api": "yarn workspace @p0/api",
+    "@fe": "yarn workspace @p0/fe",
+    "p0:_": "docker-compose --env-file tools/shared.dev.env -f tools/services.dev.yml -f tools/secrets.dev.yml -p p0",
+    "p0:dev": "yarn p0:_ --profile all up --build",
+    "p0:api": "yarn p0:_ --profile api up --build",
+    "p0:mongo": "yarn p0:_ --profile mongo up --build -d",
+    "p0:storage": "yarn p0:_ --profile storage up --build -d",
+    "p0:build": "yarn p0:_ up --build -d",
+    "p0:start": "docker-compose -p p0 start",
+    "p0:stop": "docker-compose -p p0 stop",
+    "p0:restart": "docker-compose -p p0 restart",
+    "p0:logs": "docker-compose -p p0 logs -f -t --tail=50",
+    "p0:ps": "docker-compose -p p0 ps --all",
+    "p0:ps:images": "docker image ls -f reference=\"p0*\"",
+    "clean:modules": "rm yarn.lock && find . -maxdepth 2 -type d -name node_modules -exec sudo rm -rf \"{}\" \\;",
+    "clean:containers": "docker rm -v $(docker ps -aqf name=p0\\*); docker volume prune -f",
+    "clean:images": "docker image prune -f && docker image rm -f $(docker image ls -f reference='p0*' --format {{.ID}})",
+    "clean:ts": "find . -maxdepth 2 -type d -name dist -exec sudo rm -rf \"{}\" \\; && find . -name \"*.tsbuildinfo\" -delete",
+    "ts:build": "yarn @common build && yarn @dal build && yarn @api build && yarn @fe build",
+    "image:build": "./tools/1.0.build.docker.image.sh",
+    "image:preview": "docker-compose -f tools/docker-compose.yml -f tools/secrets.dev.yml -p p0_preview up",
+    "image:stop": "docker-compose -p p0_preview stop",
+    "start:prod": "concurrently \"yarn @api start\" \"yarn @fe start\""
+  },
+  "workspaces": [
+    "api",
+    "dal",
+    "common",
+    "frontend"
+  ],
+  "packageManager": "yarn@3.5.1"
+}

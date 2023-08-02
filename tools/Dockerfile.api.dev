@@ -1,0 +1,10 @@
+# This is optimized version for local development
+FROM node:20-bullseye-slim
+LABEL Description="Project0" Author="Dmitry Thaler" Version="3.0"
+
+# you need to use docker-compose.yml to pass these values
+ARG API_PORT WS_PORT DEBUG_PORT
+EXPOSE ${API_PORT} ${WS_PORT} ${DEBUG_PORT}
+WORKDIR /opt/app
+
+

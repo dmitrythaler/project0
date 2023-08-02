@@ -1,0 +1,19 @@
+.message-hub {
+  @apply flex flex-col items-stretch content-start;
+  position: fixed;
+  padding: 0;
+  top: 8.5rem;
+  right: 1.7rem;
+  z-index: 30;
+}
+.message-box {
+  @apply flex flex-col items-stretch content-start rounded-md;
+  width: 30rem;
+  background-color: var(--bg-transparent);
+  border: 1px solid var(--subtle-border);
+  box-shadow: var(--border-glow);
+  backdrop-filter: blur(6px);
+  color: inherit;
+  margin-bottom: 0.5rem;
+}
+

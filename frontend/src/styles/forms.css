@@ -1,0 +1,75 @@
+/**/
+
+.app-input {
+  @apply w-full bg-gray-300 bg-opacity-25 rounded border border-gray-700 focus:border-accent text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out;
+}
+.app-input.files {
+  @apply bg-gray-300 bg-opacity-10;
+  padding: 0.15rem 0.5rem 0.15rem;
+}
+
+.app-input.error {
+  @apply border-red-700 bg-red-500/25;
+}
+
+.app-input.disabled {
+  @apply w-full bg-gray-500 bg-opacity-25 rounded border border-gray-700 text-base outline-none py-1 px-3 leading-8;
+}
+
+input[type=file]::file-selector-button {
+  @apply rounded shadow py-0 px-2 bg-accent-dark mr-4;
+  border: 1px solid var(--subtle-border);
+  box-shadow: var(--border-glow);
+  color: var(--color-accent-text);
+  cursor: pointer;
+}
+
+input[type=file]::file-selector-button:focus,
+input[type=file]::file-selector-button:active,
+input[type=file]::file-selector-button:hover {
+  outline-width: 0;
+}
+
+input[type=file]::file-selector-button:hover {
+  @apply border-transparent;
+  background-color: var(--color-accent);
+}
+
+textarea.func-body {
+  @apply w-full bg-gray-500 bg-opacity-25 border border-t-0 border-b-0 border-gray-700 text-base outline-none py-1 pl-4;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9rem;
+  line-height: 1.0rem;
+}
+pre.func-wrap {
+  @apply w-full bg-gray-400 bg-opacity-25 border border-gray-700 outline-none p-0 leading-4 px-1 py-1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9rem;
+  line-height: 1.0rem;
+}
+pre.func-wrap.begin {
+  @apply rounded-t border border-b-0;
+}
+pre.func-wrap.end {
+  @apply rounded-b border border-t-0;
+}
+
+select.app-select {
+  @apply w-full bg-gray-300 bg-opacity-25 rounded border border-gray-700 focus:border-accent text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: 0;
+}
+
+select.app-select option, select.app-select option:not(checked) {
+  @apply w-full;
+  background-color: var(--bg-transparent);
+  background-blend-mode: multiply;
+}
+
+select.app-select option:hover {
+  background-color: green;
+  color: black;
+}
+

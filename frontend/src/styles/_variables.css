@@ -1,0 +1,113 @@
+:root {
+  --main-hue: 180;
+  --main-lum: 97;
+
+  --color-default: hsl(var(--main-hue), 29%, 24%);
+  --color-default-light: hsl(var(--main-hue), 29%, 38%);
+  --color-inverted: hsl(var(--main-hue), 8%, 61%);
+  --color-inverted-light: hsl(var(--main-hue), 8%, 75%);
+
+  --color-accent: hsl(var(--main-hue), 100%, 38%);
+  --color-accent-dark: hsl(var(--main-hue), 80%, 25%);
+  --color-accent-text: hsl(var(--main-hue), 100%, 100%);
+
+  --text-main: hsl(200, 100%, 100%);
+  --bg-main: hsl(207, 63%, 9%);
+  --bg-transparent: hsla(200, 100%, 11%, 0.8);
+
+  --subtle-border: hsla(0, 0%, 100%, 0.2);
+  --border-glow: 0 0 15px hsla(0, 0%, 0%, 0.3);
+}
+
+[data-theme="dark"] {
+  --main-lum: 10%;
+  --text-main: hsl(var(--main-hue), 10%, 100%);
+  --bg-main: hsl(var(--main-hue), 10%, var(--main-lum));
+  --bg-transparent: hsla(var(--main-hue), 10%, 10%, 0.8);
+  --subtle-border: hsla(0, 0%, 100%, 0.2);
+  --border-glow: 0 0 15px hsla(0, 0%, 0%, 0.5);
+
+  --color-default: hsl(var(--main-hue), 5%, 60%);
+  --color-default-light: hsl(var(--main-hue), 5%, 70%);
+  --color-default-text: hsl(var(--main-hue), 5%, 5%);
+  --color-inverted: hsl(var(--main-hue), 10%, 35%);
+  --color-inverted-light: hsl(var(--main-hue), 10%, 45%);
+  --color-inverted-text: hsl(var(--main-hue), 5%, 90%);
+}
+
+[data-theme="light"] {
+  --main-lum: 97%;
+  --text-main: hsl(var(--main-hue), 5%, 5%);
+  --bg-main: hsl(var(--main-hue), 10%, var(--main-lum));
+  --bg-transparent: hsla(var(--main-hue), 10%, var(--main-lum), 0.9);
+  --subtle-border: hsla(0, 0%, 0%, 0.3);
+  --border-glow: 0 0 15px hsla(0, 0%, 0%, 0.4);
+
+  --color-default: hsl(var(--main-hue), 10%, 25%);
+  --color-default-light: hsl(var(--main-hue), 15%, 35%);
+  --color-default-text: hsl(var(--main-hue), 50%, 97%);
+  --color-inverted: hsl(var(--main-hue), 5%, 60%);
+  --color-inverted-light: hsl(var(--main-hue), 5%, 70%);
+  --color-inverted-text: hsl(var(--main-hue), 5%, 10%);
+}
+
+
+[data-accent="green"] {
+  --main-hue: 145;
+  --color-accent: hsl(145, 46%, 51%);
+  --color-accent-dark: hsl(152, 45%, 28%);
+  --color-accent-text: hsl(136, 100%, 97%);
+  --color-accent-contrast: hsl(152, 45%, calc(76% - var(--main-lum)/2));
+  /* --color-accent-contrast: hsl(152, 45%, 30%); */
+}
+
+[data-accent="orange"] {
+  --main-hue: 27;
+  --color-accent: hsl(27, 84%, 57%);
+  --color-accent-dark: hsl(16, 65%, 37%);
+  --color-accent-text: hsl(40, 100%, 97%);
+  --color-accent-contrast: hsl(16, 65%, calc(85% - var(--main-lum)/2));
+}
+
+
+[data-accent="indigo"] {
+  --main-hue: 229;
+  --color-accent: hsl(229, 76%, 66%);
+  --color-accent-dark: hsl(237, 47%, 52%);
+  --color-accent-text: hsl(213, 100%, 96%);
+  --color-accent-contrast: hsl(237, 47%, calc(80% - var(--main-lum)/2));
+}
+
+
+[data-accent="gray"] {
+  --main-hue: 204;
+  --color-accent: hsl(214, 20%, 69%);
+  --color-accent-dark: hsl(218, 17%, 35%);
+  --color-accent-text: hsl(204, 45%, 98%);
+  --color-accent-contrast: hsl(218, 17%, calc(83% - var(--main-lum)/2));
+}
+
+[data-accent="teal"] {
+  --main-hue: 168;
+  --color-accent: hsl(177, 52%, 46%);
+  --color-accent-dark: hsl(183, 42%, 27%);
+  --color-accent-text: hsl(168, 100%, 95%);
+  --color-accent-contrast: hsl(183, 42%, calc(75% - var(--main-lum)/2));
+}
+
+[data-accent="blue"] {
+  --main-hue: 201;
+  --color-accent: hsl(207, 73%, 57%);
+  --color-accent-dark: hsl(213, 49%, 34%);
+  --color-accent-text: hsl(201, 100%, 96%);
+  --color-accent-contrast: hsl(213, 49%, calc(82% - var(--main-lum)/2));
+}
+
+[data-accent="purple"] {
+  --main-hue: 270;
+  --color-accent: hsl(260, 73%, 70%);
+  --color-accent-dark: hsl(256, 44%, 42%);
+  --color-accent-text: hsl(270, 100%, 98%);
+  --color-accent-contrast: hsl(256, 44%, calc(90% - var(--main-lum)/2));
+}
+

@@ -1,0 +1,27 @@
+@font-face {
+  font-family: Montserrat;
+  font-weight: 400;
+  src: url('./assets/fonts/Montserrat-Regular.woff') format('woff'),
+    url('./assets/fonts/Montserrat-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: Montserrat;
+  font-weight: 700;
+  src: url('./assets/fonts/Montserrat-Bold.woff') format('woff'),
+    url('./assets/fonts/Montserrat-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: Play;
+  font-weight: 400;
+  src: url('./assets/fonts/Play-Regular.woff') format('woff'),
+    url('./assets/fonts/Play-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: Play;
+  font-weight: 700;
+  src: url('./assets/fonts/Play-Bold.woff') format('woff'),
+    url('./assets/fonts/Play-Bold.woff2') format('woff2');
+}

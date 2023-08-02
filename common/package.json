@@ -1,0 +1,31 @@
+{
+  "name": "@p0/common",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Project0 - shared code and types definitions",
+  "private": true,
+  "author": "Dmitry Thaler <dmitry@thaler.dev>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test:it": "NODE_ENV=development node --loader ts-node/esm --experimental-specifier-resolution=node --test",
+    "test": "yarn test:it ./test/**/*.spec.ts",
+    "build": "NODE_ENV=production node --experimental-specifier-resolution=node tools/bundler.js",
+    "dev:sand": "NODE_ENV=development node --loader ts-node/esm --experimental-specifier-resolution=node"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.0",
+    "lean-logger": "^4.0.0"
+  },
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.1",
+    "@types/node": "^18.16.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.3"
+  }
+}

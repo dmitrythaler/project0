@@ -1,0 +1,69 @@
+#
+# build environment
+#
+FROM node:lts-alpine AS build
+
+# Update OS & certificates, clean up apk cache
+RUN apk update && \
+    apk upgrade && \
+    apk --no-cache add ca-certificates && \
+    update-ca-certificates && \
+    rm -fR /var/cache/apk/* && \
+    mkdir -p /opt/app/api /opt/app/common /opt/app/dal /opt/app/tools
+
+WORKDIR /opt/app
+
+ENV PATH /opt/app/node_modules/.bin:$PATH
+COPY package.json .
+COPY yarn.lock .
+COPY tsconfig.build.json .
+COPY tsconfig.workspaces.json .
+COPY common/*.ts ./common/
+COPY common/*.json ./common/
+COPY dal/*.ts ./dal/
+COPY dal/*.json ./dal/
+COPY dal/models ./dal/models
+COPY api/*.json ./api/
+COPY api/src ./api/src
+RUN yarn && yarn ts:build
+
+#
+# prod environment
+#
+FROM node:lts-alpine
+LABEL Description="Project0" Author="Dmitry Thaler" Version="3.0"
+
+ARG API_PORT WS_PORT COMMIT_HASH TAG
+EXPOSE ${API_PORT} ${WS_PORT}
+
+RUN apk update && \
+    apk upgrade && \
+    apk --no-cache add ca-certificates && \
+    update-ca-certificates && \
+    rm -fR /var/cache/apk/* && \
+    mkdir -p /opt/app/api /opt/app/common /opt/app/dal /opt/app/frontend
+
+WORKDIR /opt/app
+
+ENV PATH=/opt/app/node_modules/.bin:$PATH
+ENV COMMIT_HASH=${COMMIT_HASH}
+ENV TAG=${TAG}
+
+COPY package.json .
+COPY yarn.lock .
+
+COPY --from=build /opt/app/common/dist common/dist
+COPY --from=build /opt/app/common/package.json common/package.json
+COPY --from=build /opt/app/dal/dist dal/dist
+COPY --from=build /opt/app/dal/package.json dal/package.json
+COPY --from=build /opt/app/api/dist api/dist
+COPY --from=build /opt/app/api/package.json api/package.json
+
+# frontend sub-project should be build outside
+COPY frontend/dist /opt/app/frontend/dist
+COPY frontend/tools /opt/app/frontend/tools
+COPY frontend/package.json /opt/app/frontend/package.json
+
+RUN yarn --production --pure-lockfile --non-interactive --cache-folder ./ycache; rm -rf ./ycache
+
+CMD ["yarn", "start:prod"]

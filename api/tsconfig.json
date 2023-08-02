@@ -1,0 +1,23 @@
+{
+  "extends": "../tsconfig.workspaces.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": [
+    "./src/",
+    "./src/**/*.ts",
+    "./src/**/*.js",
+    "./src/**/*.json"
+  ],
+  "references-does-not-work": [
+    {
+      "path": "../common/tsconfig.json"
+    },
+    {
+      "path": "../dal/tsconfig.json"
+    }
+  ],
+  "comment": "tsc typecheck throws: `error TS6310: Referenced project ... may not disable emit.`, while esbuild ignores `references` param"
+}

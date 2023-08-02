@@ -1,0 +1,35 @@
+.login-main {
+  @apply text-lg;
+
+  background-color: var(--bg-transparent);
+  background-image: url('@assets/bg/white_wall2_@2X.jpg');
+  background-repeat: repeat;
+  background-blend-mode: multiply;
+
+  width: 30%;
+  min-width: 24rem;
+  max-width: 36rem;
+
+  border: 1px solid var(--subtle-border);
+  box-shadow: var(--border-glow);
+  border-radius: 0.5rem;
+  /* backdrop-filter: blur(6px); */
+  overflow: hidden;
+  color: inherit;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+
+.login-header {
+  @apply flex flex-row justify-start items-center border-b border-accent px-5 py-4;
+}
+
+.login-footer {
+  @apply flex flex-row justify-end items-center border-t border-neutral-500/50 px-5 py-4;
+}
+
+.login-body {
+  @apply py-6 px-5;
+}

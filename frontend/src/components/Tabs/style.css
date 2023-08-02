@@ -1,0 +1,30 @@
+.tabs {
+  @apply flex flex-col md:flex-row flex-wrap list-none border-b-0;
+}
+
+.tabs .tab {
+  @apply block leading-tight border-x-0 border-t-0 border-b-4 border-transparent px-6 py-2 hover:border-transparent hover:bg-accent focus:border-transparent;
+}
+
+.tabs .tab.active {
+  @apply border-b-accent;
+}
+
+.tabs .tab .tab-button {
+}
+
+.tab-content {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.tab-content .tab-pane {
+  flex: 100%;
+  display: none;
+}
+
+.tab-content .tab-pane.active {
+  display: block;
+}
+
