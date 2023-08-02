@@ -140,7 +140,9 @@ class MinioService {
   }
 
   async presignedPutObjectUrl(pathAndName: string, expirity = 3600): Promise<string> {
-    return await this.client.presignedPutObject(this.bucket, pathAndName, expirity)
+    const url = await this.client.presignedPutObject(this.bucket, pathAndName, expirity)
+    logger.minio('presigned URL created', url)
+    return url
   }
 
   /**
@@ -198,7 +200,18 @@ class MinioService {
 
   //  ---------------------------------
   private static inst_: MinioService | null = null
-  static getMinio = (opts?: ClientOptionExt): MinioService => MinioService.inst_ || (MinioService.inst_ = new MinioService(opts))
+  static getMinio = async (opts?: ClientOptionExt): Promise<MinioService> => {
+    if (MinioService.inst_) {
+      return MinioService.inst_
+    }
+    const service = new MinioService(opts)
+    const bucketExists = await service.bucketExists()
+    if (!bucketExists) {
+      service.createBucket()
+    }
+    MinioService.inst_ = service
+    return service
+  }
 }
 
 export const getMinio = MinioService.getMinio

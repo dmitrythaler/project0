@@ -49,7 +49,7 @@ export const postCreateMedia = async ({ ctx, body }: RequestExt)
   const records = await getDAL().getMediaDAL().storeMediaData(<string>currUser._id, files, <string>slug)
   const bucketFiles = records.map(getMediaName)
 
-  const minio = getMinio()
+  const minio = await getMinio()
   const getPresignedUrls = bucketFiles.map(fileName => minio.presignedPutObjectUrl(fileName, 60))
   const presignedUrls = await Promise.all(getPresignedUrls)
 
@@ -106,7 +106,7 @@ export const deleteMedia = async ({ ctx, params }: RequestExt): Promise<{}> => {
   const mediaId = params.id
   const ownerId = currUser.role !== 'Admin' ? <string>currUser._id : null
   const media = await getDAL().getMediaDAL().delete(ownerId, mediaId)
-  const minio = getMinio()
+  const minio = await getMinio()
   await minio.removeObject(media.storagePath!)
 
   getWss().broadcast({
