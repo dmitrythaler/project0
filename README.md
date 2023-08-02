@@ -42,10 +42,10 @@ Run from console:
 ~ yarn @dal dev:init-admin-user
 ~ yarn p0:stop
 ```
-Open just generated `tools/secrets.dev.yml` file and update `MINIO_ROOT_PASSWORD` env variable
+Open just generated `tools/secrets.dev.yml` file and update `MINIO_ROOT_PASSWORD` env variable. \
 Then switch back to console:
 ```bash
-~ yarn p0:up
+~ yarn p0:dev
 ```
 
 Then open http://localhost:3000 in your browser and login as `agentsmith@gmail.com` with `NeoMustDie` password.
