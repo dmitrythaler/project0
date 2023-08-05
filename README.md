@@ -48,7 +48,7 @@ Then switch back to console:
 ~ yarn p0:dev
 ```
 
-Then open http://localhost:3000 in your browser and login as `agentsmith@gmail.com` with `NeoMustDie` password.
+Then open http://localhost:3000 in your browser and login with credentials stored in `dal/tools/init.root.user.ts`.
 
 ## Dev-ops infrastructure
 
