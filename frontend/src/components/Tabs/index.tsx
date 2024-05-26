@@ -66,13 +66,15 @@ export const TabsContainer = ({ className, children, onTabChange }) => {
     onTabChange && onTabChange(activeTab)
   }, [activeTab])
 
-  const _children = children.map(c => React.cloneElement(c,
-    c.type.displayName === 'Tabs'
+  const _children = children.map(c => {
+    const props: { onTabChange?: any, activeTab?: any } = c.type.displayName === 'Tabs'
       ? { onTabChange: (t) => setActiveTab(t) }
       : c.type.displayName === 'TabContent'
-        ? { activeTab: activeTab }
+        ? {  activeTab: activeTab }
         : {}
-  ))
+
+    return React.cloneElement(c, props)
+  })
 
   return (
     <div className={className}>

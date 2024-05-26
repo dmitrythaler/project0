@@ -1,103 +1,89 @@
+import { createReducer, createAction } from '@reduxjs/toolkit'
 import {
-  USERS_BRANCH as BRANCH,
-  USERS_FETCH,
+  USERS_REQUEST,
   USERS_LOADED,
-  USERS_CREATE,
-  USERS_CREATED,
-  USERS_UPDATE,
-  USERS_UPDATED,
-  USERS_DELETE,
-  USERS_DELETED,
   USERS_ERROR,
+  USERS_CREATED,
+  USERS_UPDATED,
+  USERS_DELETED,
 } from '@p0/common/constants'
+import { errorPayload } from '@common'
+import { sendErrorMessage } from '../states/messages'
 
-import type { AnyAction } from 'redux'
+import type * as RT from '@reduxjs/toolkit'
 import type { User } from '@p0/dal'
-import type { IAPIError } from '@common/types'
+import type { IAPIError } from '@p0/common/types'
+import type { ErrorPayload } from '@common'
 
-//  ----------------------------------------------------------------------------------------------//
-//  types and consts
+
+//  ---------------------------------
+
+// utils
+
+const handleError = (err: unknown, dispatch) => {
+  const error = errorPayload(<ErrorPayload>err)
+  dispatch(sendErrorMessage(error))
+  dispatch(processingErrorAction(error))
+}
+
+// actions
+export const processingStartedAction = createAction<string>(USERS_REQUEST)
+export const processingErrorAction = createAction<IAPIError>(USERS_ERROR)
+export const usersLoadedAction = createAction<User[]>(USERS_LOADED)
+export const userCreatedAction = createAction<User>(USERS_CREATED)
+export const userUpdatedAction = createAction<User>(USERS_UPDATED)
+export const userDeletedAction = createAction<string>(USERS_DELETED)
+
+// reducer
 
 export type UsersData = {
-  users: User.Self[]
-  processing?: string|false,
+  users: User[]
+  processing?: false|string,
   error?: IAPIError
 }
 
-const initialUsersData: UsersData = {
-  users: [],
-  processing: false,
-}
-
-//  ----------------------------------------------------------------------------------------------//
-//  redicer
-
-export const reducer = (state = initialUsersData, action: AnyAction): UsersData => {
-  switch (action.type) {
-
-    case USERS_FETCH:
-    case USERS_CREATE:
-    case USERS_DELETE:
-    case USERS_UPDATE: {
-      return {
-        ...state,
-        processing: action.type,
-        error: undefined
-      }
-    }
-
-    case USERS_LOADED: {
-      return {
-        ...state,
-        processing: false,
-        users: action.payload as User.Self[]
-      }
-    }
-
-    case USERS_CREATED: {
-      return {
-        ...state,
-        processing: false,
-        users: [ ...state.users, action.payload as User.Self]
-      }
-    }
-
-    case USERS_UPDATED: {
-      const users = [...state.users]
-      const idx = users.findIndex(c => c._id === action.payload._id)
+const usersReducer: RT.Reducer = createReducer(
+  {
+    users: [],
+    processing: false,
+  } as UsersData,
+  (builder) => {
+    builder.addCase(processingStartedAction, (state, action) => {
+      state.processing = action.payload
+      state.error = undefined
+    })
+    builder.addCase(processingErrorAction, (state, action) => {
+      state.processing = false
+      state.error = action.payload
+    })
+    builder.addCase(usersLoadedAction, (state, action) => {
+      state.processing = false
+      state.error = undefined
+      state.users = action.payload
+    })
+    builder.addCase(userCreatedAction, (state, action) => {
+      state.processing = false
+      state.error = undefined
+      state.users.push(action.payload)
+    })
+    builder.addCase(userUpdatedAction, (state, action) => {
+      state.processing = false
+      state.error = undefined
+      const idx = state.users.findIndex(c => c._id === action.payload._id)
       if (idx !== -1) {
-        users[idx] = action.payload as User.Self
+        state.users[idx] = action.payload
       }
-      return {
-        ...state,
-        processing: false,
-        users
-      }
-    }
 
-    case USERS_DELETED: {
-      const users = [...state.users]
-      const idx = users.findIndex(c => c._id === action.payload._id as string)
+    })
+    builder.addCase(userDeletedAction, (state, action) => {
+      state.processing = false
+      state.error = undefined
+      const idx = state.users.findIndex(c => c._id === action.payload)
       if (idx !== -1) {
-        users.splice(idx, 1)
+        state.users.splice(idx, 1)
       }
-      return {
-        ...state,
-        processing: false,
-        users
-      }
-    }
-
-    case USERS_ERROR: {
-      return {
-        ...state,
-        processing: false,
-        error: action.payload as IAPIError
-      }
-    }
-
-    default:
-      return state
+    })
   }
-}
+)
 
+export default usersReducer

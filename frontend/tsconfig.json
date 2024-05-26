@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig.workspaces.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     // "target": "es2022",
     "outDir": "./dist",
@@ -26,11 +26,6 @@
       "@assets": ["./src/assets"],
     },
   },
-  "references-does-not-work": [
-    {
-      "path": "../common/tsconfig.build.json"
-    }
-  ],
   "include": [
     "./src/",
     "./src/**/*.ts",

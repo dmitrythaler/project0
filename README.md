@@ -1,4 +1,4 @@
-# Project0
+# Project Zero
 
 Monorepo with Typescript and Yarn workspaces.<br />
 This is a demo/boiler-plate started as a spin-off of my recent project.
@@ -8,6 +8,7 @@ This is a demo/boiler-plate started as a spin-off of my recent project.
 * Yarn workspaces
 * Monorepo
 * Typescript
+* esbuild as compiler
 
 ### Workspaces
 
@@ -17,18 +18,6 @@ The project consists of 4 worspaces:
 * `@p0/api` is a main API;
 * `@p0/fe` is a frontend part;
 
-```bash
-~ yarn workspaces list --json
-{"location":".","name":"project0"}
-{"location":"api","name":"@p0/api"}
-{"location":"common","name":"@p0/common"}
-{"location":"dal","name":"@p0/dal"}
-{"location":"frontend","name":"@p0/fe"}
-```
-
-## Typescript
-
-Take a look at `tools/tsconfig.workspaces.json`. It's being referrenced from every workspace's own ts configs and they are bases for dev and build ts compilations.
 
 ## Install and run (development)
 
@@ -38,9 +27,6 @@ Run from console:
 ~ yarn install
 ~ yarn ts:build
 ~ tools/0.0.gen.keypair.js
-~ yarn p0:mongo
-~ yarn @dal dev:init-admin-user
-~ yarn p0:stop
 ```
 Open just generated `tools/secrets.dev.yml` file and update `MINIO_ROOT_PASSWORD` env variable. \
 Then switch back to console:
@@ -48,10 +34,14 @@ Then switch back to console:
 ~ yarn p0:dev
 ```
 
-Then open http://localhost:3000 in your browser and login with credentials stored in `dal/tools/init.root.user.ts`.
+Then open http://localhost:3000 in your browser and login with credentials stored in `dal/models/player/user-dal.ts`.
 
-## Dev-ops infrastructure
+## Tests
 
-The `tools/` folder  \
+* node native for unit tests;
+* [testcontainers](https://testcontainers.com/) for the integral ones
+
+## Deployment infrastructure
+
 TBD
 

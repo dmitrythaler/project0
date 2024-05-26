@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express'
-import type { User } from '@p0/dal'
+import type { Player } from '@p0/dal'
 
 export type Context = Record<string, unknown> & {
   time?: number
   sessionId?: string
-  user?: User.Self
+  user?: Player
 }
 
 export type RequestExt = Request & { ctx?: Context }

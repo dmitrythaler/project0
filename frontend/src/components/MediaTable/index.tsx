@@ -1,4 +1,4 @@
-import { hrSize } from '@common'
+import { hrSize } from '@p0/common/core'
 import './style.css'
 
 // @ts-ignore

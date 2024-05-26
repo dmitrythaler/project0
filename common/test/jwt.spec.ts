@@ -1,8 +1,8 @@
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
 
-import { JWTRig } from '../jwt'
-import type { Payload, Config } from '../jwt'
+import { JWTRig } from '../jwt.ts'
+import type { Payload, Config } from '../jwt.ts'
 
 const data: Payload = {
   me: 'John',

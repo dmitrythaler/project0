@@ -41,6 +41,7 @@ export const STATUS_ERROR = `${STATUS_BRANCH}/ERROR`
 
 // Session
 export const SESSION_BRANCH = 'SESSION'
+export const SESSION_REQUEST = `${SESSION_BRANCH}/REQUEST`
 export const SESSION_LOGIN = `${SESSION_BRANCH}/LOGIN`
 export const SESSION_LOGOUT = `${SESSION_BRANCH}/LOGOUT`
 export const SESSION_LOADED = `${SESSION_BRANCH}/LOADED`
@@ -52,6 +53,7 @@ export const SESSION_ERROR = `${SESSION_BRANCH}/ERROR`
 
 // User
 export const USERS_BRANCH = 'USERS'
+export const USERS_REQUEST = `${USERS_BRANCH}/REQUEST`
 export const USERS_FETCH = `${USERS_BRANCH}/FETCH`
 export const USERS_LOADED = `${USERS_BRANCH}/LOADED`
 export const USERS_CREATE = `${USERS_BRANCH}/CREATE`
@@ -64,6 +66,7 @@ export const USERS_ERROR = `${USERS_BRANCH}/ERROR`
 
 // Media
 export const MEDIA_BRANCH = 'MEDIA'
+export const MEDIA_REQUEST = `${MEDIA_BRANCH}/REQUEST`
 export const MEDIA_FETCH = `${MEDIA_BRANCH}/FETCH`
 export const MEDIA_LOADED = `${MEDIA_BRANCH}/LOADED`
 export const MEDIA_UPLOAD = `${MEDIA_BRANCH}/UPLOAD`

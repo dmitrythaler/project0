@@ -1,31 +1,35 @@
+import { createReducer, createAction } from '@reduxjs/toolkit'
 import {
   EVENTS_ADD,
-  EVENTS_CLEAR
+  EVENTS_CLEAR,
 } from '@p0/common/constants'
 
-import type { AnyAction } from 'redux'
-import type { AppActionExt } from '@common/types'
+import type * as RT from '@reduxjs/toolkit'
+import type { AppAction } from '@p0/common/types'
 
-//  ----------------------------------------------------------------------------------------------//
-
-export const reducer = (state: AppActionExt[] = [], action: AnyAction): AppActionExt[] => {
-  switch (action.type) {
-    case EVENTS_ADD: {
-      return [
-        ...state,
-        {
-          ...action.payload,
-          time: new Date()
-        } as AppActionExt
-      ]
-    }
-
-    case EVENTS_CLEAR: {
-      return []
-    }
-
-    default:
-      return state
-  }
+export type AppActionExt = AppAction & {
+  time?: Date | null
 }
+//  ---------------------------------
 
+// actions
+export const eventAddAction = createAction<AppActionExt>(EVENTS_ADD)
+export const eventsClearAction = createAction(EVENTS_CLEAR)
+
+const eventsReducer: RT.Reducer = createReducer(
+  [] as AppActionExt[],
+  (builder) => {
+    builder.addCase(eventAddAction, (state, action) => {
+      state.push({
+        time: new Date(),
+        ...action.payload,
+      })
+    })
+    builder.addCase(eventsClearAction, (state/* , action */) => {
+      state.length = 0
+    })
+
+  }
+)
+
+export default eventsReducer

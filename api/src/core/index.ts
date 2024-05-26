@@ -2,7 +2,7 @@ import { config } from './config.ts'
 import { APIError, logger } from '@p0/common'
 
 import type { RequestExt, APIResponse, Context } from './types.ts'
-import type { User } from '@p0/dal'
+import type { Player } from '@p0/dal'
 
 export { jwt } from './jwt.ts'
 export { config }
@@ -31,12 +31,12 @@ export const decorateResponse = (data: Record<string, unknown>, req: RequestExt,
 }
 
 // no use, auth middleware already ensured it ...
-export const ensureUser = (ctx?: Context): User.Self => {
+export const ensureUser = (ctx?: Context): Player => {
   const currUser = ctx?.user
   if (!currUser) {
     // rather impossible
     logger.error(`ACCESS VIOLATION: user not logged in, session ${ctx?.sessionId}`)
-    throw new APIError(403)
+    throw new APIError(401)
   }
   return currUser
 }

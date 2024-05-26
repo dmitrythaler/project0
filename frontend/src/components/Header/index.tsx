@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { UsersActions, SessionActions, useAppDispatch, MessagesActions } from '@storage'
+import { UsersState, SessionState, useAppDispatch, MessagesState } from '@storage'
 import UserModal from '@components/UserModal'
 import InfoModal from '@components/InfoModal'
 
@@ -25,12 +25,12 @@ export default ({ currUser }) => {
 
   const onUserSave = (dataFromModal) => {
     showUserModal(false)
-    dispatch(UsersActions.updateUserAction(dataFromModal))
+    dispatch(UsersState.updateUserAction(dataFromModal))
   }
 
   const onLogout = () => {
-    dispatch(SessionActions.logoutUserAction())
-    dispatch(MessagesActions.sendMessageAction({
+    dispatch(SessionState.logoutUser())
+    dispatch(MessagesState.sendMessage({
       header: 'Bye...',
       body: 'You are logged out.',
       timeout: 5

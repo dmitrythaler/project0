@@ -8,14 +8,13 @@ import './style.css'
 
 type Validate = {
   email?: boolean
-  lastName?: boolean
-  firstName?: boolean
+  fullName?: boolean
   password?: boolean
 }
 
 export default ({ visible, onClose, onSave, user, adminMode }) => {
 
-  const [currUser, setCurrUser] = useState({} as User.Self)
+  const [currUser, setCurrUser] = useState({} as User)
   const [validationError, setValidationError] = useState({})
 
   useEffect(() => {
@@ -38,12 +37,8 @@ export default ({ visible, onClose, onSave, user, adminMode }) => {
       ve.email = true
       error = true
     }
-    if (!currUser.lastName) {
-      ve.lastName = true
-      error = true
-    }
-    if (!currUser.firstName) {
-      ve.firstName = true
+    if (!currUser.fullName) {
+      ve.fullName = true
       error = true
     }
     if (update) {
@@ -81,16 +76,10 @@ export default ({ visible, onClose, onSave, user, adminMode }) => {
 
       <form>
         <div className="grid gap-4 lg:grid-cols-4 mb-4">
-          <div className="lg:col-span-2">
-            <label htmlFor="firstName" className="">First Name</label>
-            <input type="text" id="firstName" name="firstName" onChange={onChange} value={currUser.firstName}
+          <div className="lg:col-span-4">
+            <label htmlFor="firstName" className="">Name</label>
+            <input type="text" id="firstName" name="firstName" onChange={onChange} value={currUser.fullName}
               className={`app-input ${hasError('firstName')}`} placeholder="* Required! User's first name"
-            />
-          </div>
-          <div className="lg:col-span-2">
-            <label htmlFor="lastName" className="">Last Name</label>
-            <input type="text" id="lastName" name="lastName" onChange={onChange} value={currUser.lastName}
-              className={`app-input ${hasError('lastName')}`} placeholder="* Required! User's last name"
             />
           </div>
         </div>

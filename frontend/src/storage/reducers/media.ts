@@ -1,77 +1,67 @@
+import { createReducer, createAction } from '@reduxjs/toolkit'
 import {
-  MEDIA_BRANCH as BRANCH,
-  MEDIA_FETCH,
+  MEDIA_REQUEST,
   MEDIA_LOADED,
-  MEDIA_UPLOAD,
   MEDIA_UPLOADED,
-  MEDIA_UPDATE,
   MEDIA_UPDATED,
-  MEDIA_DELETE,
   MEDIA_DELETED,
   MEDIA_ERROR
 } from '@p0/common/constants'
 
-import type { AnyAction } from 'redux'
+import type * as RT from '@reduxjs/toolkit'
 import type { Media } from '@p0/dal'
-import type { IAPIError } from '@common/types'
+import type { IAPIError } from '@p0/common/types'
 
-//  ----------------------------------------------------------------------------------------------//
-// types and consts
+
+//  ---------------------------------
+
+// actions
+export const processingStartedAction = createAction<string>(MEDIA_REQUEST)
+export const processingErrorAction = createAction<IAPIError>(MEDIA_ERROR)
+export const mediaLoadedAction = createAction<Media[]>(MEDIA_LOADED)
+export const mediaUploadedAction = createAction(MEDIA_UPLOADED)
+export const mediaUpdatedAction = createAction(MEDIA_UPDATED)
+export const mediaDeletedAction = createAction<string>(MEDIA_DELETED)
+
+// reducer
 
 export type MediaData = {
-  media: Media.Self[]
-  processing?: string|boolean,
+  media: Media[]
+  processing?: false|string,
   error?: IAPIError
 }
 
-const initialMediaData: MediaData = {
-  media: [],
-  processing: false,
-}
-
-//  ----------------------------------------------------------------------------------------------//
-//  redicer
-
-export const reducer = (state = initialMediaData, action: AnyAction): MediaData => {
-  switch (action.type) {
-
-    case MEDIA_FETCH:
-    case MEDIA_UPLOAD:
-    case MEDIA_UPDATE:
-    case MEDIA_DELETE: {
-      return {
-        ...state,
-        processing: action.type
+const mediaReducer: RT.Reducer = createReducer(
+  {
+    media: [],
+    processing: false,
+  } as MediaData,
+  (builder) => {
+    builder.addCase(processingStartedAction, (state, action) => {
+      state.processing = action.payload
+      state.error = undefined
+    })
+    builder.addCase(processingErrorAction, (state, action) => {
+      state.processing = false
+      state.error = action.payload
+    })
+    builder.addCase(mediaLoadedAction, (state, action) => {
+      state.processing = false
+      state.media = action.payload as Media[]
+    })
+    builder.addCase(mediaUploadedAction, (state/* , action */) => {
+      state.processing = false
+    })
+    builder.addCase(mediaUpdatedAction, (state/* , action */) => {
+      state.processing = false
+    })
+    builder.addCase(mediaDeletedAction, (state, action) => {
+      const idx = state.media.findIndex(c => c._id === action.payload)
+      if (idx !== -1) {
+        state.media.splice(idx, 1)
       }
-    }
-
-    case MEDIA_LOADED: {
-      return {
-        ...state,
-        processing: false,
-        media: action.payload
-     }
-    }
-
-    case MEDIA_UPLOADED:
-    case MEDIA_UPDATED:
-    case MEDIA_DELETED: {
-      return {
-        ...state,
-        processing: false
-      }
-    }
-
-    case MEDIA_ERROR: {
-      return {
-        ...state,
-        processing: false,
-        error: action.payload
-      }
-    }
-
-    default:
-      return state
+    })
   }
-}
+)
 
+export default mediaReducer

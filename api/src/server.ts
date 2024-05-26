@@ -7,7 +7,6 @@ import { getDAL } from '@p0/dal'
 import { config } from './core/index.ts'
 import notchMw from './middlewares/notch.ts'
 import routes from './routes/index.ts'
-import { getWss } from './services/wss.ts'
 
 //  ---------------------------------
 //  the last frontier
@@ -81,13 +80,11 @@ class API {
         `API Server started, listening on port ${this.config.port}, project: ${this.config.name}, version: ${this.config.version}, API ${this.config.api || '[not set]'}, ${this.config.description}, environment: ${this.config.env}`
       )
     })
-    getWss().start()
     getDAL().init()
   }
 
   close() {
     this.server?.close()
-    getWss().close()
   }
 }
 

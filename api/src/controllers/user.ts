@@ -1,100 +1,76 @@
 import {
-  APIError,
-  logger,
-  USERS_CREATED,
-  USERS_UPDATED,
-  USERS_DELETED
+  // logger,
+  assertPermissions,
+  createRBACFilter,
+  makeBrandedValue
 } from '@p0/common'
 import { getDAL } from '@p0/dal'
 import { jwt, ensureUser } from '../core/index.ts'
-import { getWss } from '../services/wss.ts'
 
 import type { RequestExt } from '../core/index.ts'
-import type { User } from '@p0/dal'
-import { TypeCopy/* , AppAction */ } from '@p0/common/types.ts'
+import type { User, UserList } from '@p0/dal'
+import type { PlayerID } from '@p0/common/types'
 
 //  ---------------------------------
-export const getUsersList = async ({ ctx }: RequestExt): Promise<{ users: User.Self[] }> => {
+export const getUsersList = async ({ ctx }: RequestExt): Promise<UserList> => {
   const currUser = ensureUser(ctx)
-  const users = await getDAL().getUserDAL().getList()
-  if (currUser.role !== 'Admin') {
-    // only Admins can see all users
-    const user = users.find(u => u.email === currUser.email)
-    return { users: user ? [user] : [] }
+  const filter = createRBACFilter(currUser, 'User')
+  if (filter === false) {
+    return { data: [], meta: { total: 0 } }
   }
-  return { users }
+  if (filter === true) {
+    return getDAL().getUserDAL().getList()
+  }
+  return getDAL().getUserDAL().getList({ filter })
 }
 
-export const getUserByEmail = async ({ ctx, params }: RequestExt): Promise<{ user: User.Self }> => {
+export const getUserByEmail = async ({ ctx, params }: RequestExt): Promise<{ user: User }> => {
   const currUser = ensureUser(ctx)
   const userEmail = params.email
-
-  if (currUser.role !== 'Admin' && currUser.email !== userEmail) {
-    logger.error(`ACCESS VIOLATION: role ${currUser.role} has no enough rights, session ${ctx?.sessionId}`)
-    throw new APIError(403)
-  }
-
   const user = await getDAL().getUserDAL().getByEmail(userEmail)
+
+  assertPermissions(currUser, 'User:Get', user)
   return { user }
 }
 
-export const postCreateUser = async ({ ctx, body }: RequestExt): Promise<{ user: User.Self }> => {
+export const postCreateUser = async ({ ctx, body }: RequestExt): Promise<{ user: User }> => {
   const currUser = ensureUser(ctx)
-  if (currUser.role !== 'Admin') {
-    logger.error(`ACCESS VIOLATION: role ${currUser.role} has no enough rights, session ${ctx?.sessionId}`)
-    throw new APIError(403)
-  }
+  const newUser: User = body.data
+  assertPermissions(currUser, 'User:Create', newUser)
 
-  const user = await getDAL().getUserDAL().create(body.data)
-  getWss().broadcast({
-    type: USERS_CREATED,
-    payload: <TypeCopy<User.Self>>user
-  })
-
-  return { user }
+  return { user: await getDAL().getUserDAL().create(newUser) }
 }
 
-export const patchUpdateUser = async ({ ctx, params, body }: RequestExt): Promise<{ user: User.Self }> => {
+export const patchUpdateUser = async ({ ctx, params, body }: RequestExt): Promise<{ user: User }> => {
   const currUser = ensureUser(ctx)
-  const userId = params.id
+  const userId = makeBrandedValue<PlayerID>(params.id)
+  const userDAL = getDAL().getUserDAL()
+  let user = await userDAL.getById(userId)
 
-  if (currUser.role !== 'Admin') {
-    if (currUser._id !== userId) {
-      logger.error(`ACCESS VIOLATION: role ${currUser.role} has no enough rights, session ${ctx?.sessionId}`)
-      throw new APIError(403)
-    }
-    delete body.data.role
-    delete body.data.isActive
+  assertPermissions(currUser, 'User:Update', user)
+  if ((body.data.role && body.data.role !== user.role) ||
+    (body.data.isActive ?? body.data.isActive !== user.isActive)) {
+    assertPermissions(currUser, 'User:UpdateRole', body.data)
   }
-  const user = await getDAL().getUserDAL().update(userId, body.data)
-  getWss().broadcast({
-    type: USERS_UPDATED,
-    payload: <TypeCopy<User.Self>>user
-  })
+
+  user = await userDAL.update(userId, body.data)
   return { user }
 }
 
 export const deleteUser = async ({ ctx, params }: RequestExt): Promise<void> => {
   const currUser = ensureUser(ctx)
-  if (currUser.role !== 'Admin') {
-    logger.error(`ACCESS VIOLATION: role ${currUser.role} has no enough rights, session ${ctx?.sessionId}`)
-    throw new APIError(403)
-  }
-
-  const userId = params.id
-  await getDAL().getUserDAL().delete(userId)
-  getWss().broadcast({
-    type: USERS_DELETED,
-    payload: { _id: userId }
-  })
+  const userDAL = getDAL().getUserDAL()
+  const userId = makeBrandedValue<PlayerID>(params.id)
+  let user = await userDAL.getById(userId)
+  assertPermissions(currUser, 'User:Delete', user)
+  await userDAL.delete(userId)
 }
 
 export const postLoginUser = async ({ body }: RequestExt)
-: Promise<{ user: User.Self, token: string, wsToken: string }> => {
+: Promise<{ user: User, token: string }> => {
   const { creds } = body.data
   const user = await getDAL().getUserDAL().login(creds.email, creds.password)
   const token = jwt.sign({ user })
-  const wsToken = jwt.sign({ id: user._id })
-  return { user, token, wsToken }
+  return { user, token }
 }
 

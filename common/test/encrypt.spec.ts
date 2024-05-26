@@ -1,7 +1,7 @@
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
 
-import { EncryptionRig } from '../encrypt'
+import { EncryptionRig } from '../encrypt.ts'
 
 /*
 API_PRIVATE_KEY: MIHuAgEAMBAGByqGSM49AgEGBSuBBAAjBIHWMIHTAgEBBEIA7CtPiBzjLiyX4sSP7I2+ail45jU38CDhmj+f6sZwldAos8d7Jl7ecqIDCGlBIaLcaU/imU6aeVOC1Ks/hHYh1EahgYkDgYYABAEMrfUUq5t7r6YK65NahBVbV33kRCLVd0ABB3QrsLluU2ZcJr+AJ5aYWhF3BdNYi0HoHZOn/LpmmAnWw7FfeB32UwB5WbuLwXsaCXam2SeKzZdlfs1RHB5rloqjlfBtVKdKLxIos466C9wj/3di9IimxwYWWeS98cv5W8umeylWTFdZHA==
@@ -27,7 +27,7 @@ describe('EncryptionRig usage suite', () => {
     assert.ok(key)
     assert.equal(key.length, len / 4)
     rig = new EncryptionRig(key)
-    console.log('+++ key:', key)
+    // console.log('+++ key:', key)
   })
 
   it('should encrypt/decrypt short string', () => {

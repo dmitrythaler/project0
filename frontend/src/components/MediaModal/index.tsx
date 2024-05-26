@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { hrSize } from '@common'
+import { hrSize } from '@p0/common/core'
 import Modal from '@components/Modal'
-import { MessagesActions, useAppDispatch } from '@storage'
+import { MessagesState, useAppDispatch } from '@storage'
 
 import type { Media } from '@p0/dal'
 
@@ -39,7 +39,7 @@ const imgLoad = async (file: File): Promise<FileWithDimentions> => {
 
 export default ({ visible, onClose, onSave, media }) => {
 
-  const [currMedia, setCurrMedia] = useState({ slug: '' } as Media.Self)
+  const [currMedia, setCurrMedia] = useState({ slug: '' } as Media)
   const [validationError, setValidationError] = useState({})
   const [fileList, setFileList] = useState([] as FileWithDimentions[])
   const dispatch = useAppDispatch()
@@ -59,7 +59,7 @@ export default ({ visible, onClose, onSave, media }) => {
     const files_ = [...e.target.files]
     const files: File[] = files_.filter(f => f.type.startsWith('image/'))
     if (files_.length > files.length) {
-      dispatch(MessagesActions.sendMessageAction({
+      dispatch(MessagesState.sendMessage({
         header: 'Warning',
         body: 'Incorrect media type, non-image files have been skipped',
       }))

@@ -18,8 +18,8 @@ const router = express.Router()
 
 router.post('/', async (req: RequestExt, res: Response, next: NextFunction) => {
   try {
-    const { user, token, wsToken } = await postLoginUser(req)
-    const { _id, email, firstName, lastName, role, lastLogin } = <User.Self>user
+    const { user, token } = await postLoginUser(req)
+    const { _id, email, fullName, role, lastLogin } = user as User
 
     const maxAge = jwt.getExpSec() * 1000
     res
@@ -32,8 +32,7 @@ router.post('/', async (req: RequestExt, res: Response, next: NextFunction) => {
         maxAge
       })
       .json(decorateResponse({
-        user: { _id, email, firstName, lastName, role, lastLogin },
-        wsToken
+        user: { _id, email, fullName, role, lastLogin },
       }, req))
   } catch(err) {
     next(err)

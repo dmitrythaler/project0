@@ -1,5 +1,7 @@
 node_modules/
 sandbox/
+secrets/
+.vscode/
 *.key
 *.key.*
 *.pem
@@ -39,3 +41,6 @@ yarn-error.log*
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# this specific repo
+project.md

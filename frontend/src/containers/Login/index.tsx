@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useAppDispatch, SessionActions } from '@storage'
+import { useAppDispatch, SessionState } from '@storage'
 
 import './style.css'
 
@@ -34,7 +34,7 @@ export default () => {
     }
 
     if (!error) {
-      dispatch(SessionActions.loginUserAction(creds))
+      dispatch(SessionState.loginUser(creds))
     } else {
       setValidationError(ve)
       setTimeout(() => {

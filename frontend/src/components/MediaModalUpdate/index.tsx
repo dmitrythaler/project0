@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { hrSize } from '@common'
+import { hrSize } from '@p0/common/core'
 import Modal from '@components/Modal'
 import type { Media } from '@p0/dal'
 
@@ -9,7 +9,7 @@ import './style.css'
 
 export default ({ visible, onClose, onSave, media }) => {
 
-  const [currMedia, setCurrMedia] = useState({} as Media.Self)
+  const [currMedia, setCurrMedia] = useState({} as Media)
   const [validationError, setValidationError] = useState({})
   const [updateAllSlugs, setUpdateAllSlugs] = useState(false)
 

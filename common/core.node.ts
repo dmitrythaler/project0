@@ -1,6 +1,8 @@
+import { uuidv7 } from "uuidv7-js";
 import removeAccents from 'remove-accents'
 import { APIError } from './error.ts'
 
+import type { WithDates } from './types.ts'
 //  ---------------------------------
 
 const camel2SnakeCase = (text: string): string => text
@@ -24,8 +26,7 @@ export const cleanUpSlug = (name: string): string =>
     removeAccents(
       name.replace(/[.,_()* =+@&^%$#!?]/g, '-')
         .replace(/-+$|^-+/g, '')
-        .replace(/--/g, '-')
-        .replace(/--/g, '-') // enough for 4
+        .replace(/--+/g, '-')
     ).toLowerCase()
   )
 
@@ -99,6 +100,18 @@ export const validateInput = <U>(
   return input
 }
 
+export const setCreatedAt = <T extends WithDates>(entity: T): T => ({
+  ...entity,
+  createdAt: new Date(),
+  updatedAt: null
+})
+
+export const setUpdatedAt = <T extends WithDates>(entity: T): T => ({
+  ...entity,
+  updatedAt: new Date()
+})
+
+
 // TypeScript cannot use arrowFunctions for assertions, workaround for the 2 next below
 // https://github.com/microsoft/TypeScript/issues/34523#issuecomment-700491122
 
@@ -114,7 +127,7 @@ export const assertNonNullable: <T>(input: T, msg?: string, code?: number) => as
   }
 }
 
-export const assert = (expression: boolean, msg: string, code = 400): asserts expression => {
+export const assert = (expression: boolean, msg: string, code = 400) => {
   if (!expression) {
     throw new APIError(code, msg)
   }
@@ -167,3 +180,18 @@ export const streamToBuffer = async (stream: NodeJS.ReadableStream): Promise<Buf
     stream.on("end", () => resolve(Buffer.concat(chunks as Uint8Array[])))
   })
 }
+
+
+/**
+ * Branded strings utils
+ */
+
+export const genUUID = <T = string>(): T => {
+  return uuidv7() as T
+}
+
+export const makeBrandedValue = <T extends string>(input: string): T => {
+  return input as T
+}
+
+

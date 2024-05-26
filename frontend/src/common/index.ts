@@ -1,8 +1,7 @@
 import axios from 'axios'
-import type * as A from 'axios'
 
-export { hrSize } from '@p0/common/core'
-import type { IAPIError } from './types.ts'
+import type * as A from 'axios'
+import type { IAPIError } from '@p0/common/types'
 
 //  ---------------------------------
 export type ErrorPayload = A.AxiosError | Error

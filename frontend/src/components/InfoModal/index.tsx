@@ -3,7 +3,7 @@ import { timeString } from '@common'
 import Modal from '@components/Modal'
 
 import { useAppSelector, useAppDispatch } from '@storage'
-import { SessionActions, StatusActions, EventsActions } from '@storage'
+import { SessionState, StatusState, EventsState } from '@storage'
 
 import './style.css'
 
@@ -11,7 +11,7 @@ import './style.css'
 
 export default ({ visible, onClose }) => {
 
-  const events = useAppSelector(EventsActions.getEvents)
+  const events = useAppSelector(EventsState.getEvents)
   const dispatch = useAppDispatch()
   const bottomRef = useRef<HTMLDivElement|null>(null)
 
@@ -19,7 +19,7 @@ export default ({ visible, onClose }) => {
     bottomRef.current?.scrollIntoView(/* { behavior: "smooth" } */)
   }, [events, visible])
 
-  const currUser = useAppSelector(SessionActions.getUser)
+  const currUser = useAppSelector(SessionState.getUser)
   if (!currUser) {
     return null
   }
@@ -27,8 +27,8 @@ export default ({ visible, onClose }) => {
   return (
     <Modal visible={visible} onClose={onClose} closeOnBackdrop={true} header="Events"
       buttons={[
-        { caption: 'Get Status', className: 'btn-accent', onClick: () => dispatch(StatusActions.fetchAppStatusAction()) },
-        { caption: 'Clear', className: 'btn-accent', onClick: () => dispatch(EventsActions.clearEventsAction()) },
+        { caption: 'Get Status', className: 'btn-accent', onClick: () => dispatch(StatusState.fetchAppStatus()) },
+        { caption: 'Clear', className: 'btn-accent', onClick: () => dispatch(EventsState.eventsClearAction()) },
         { caption: 'Close', className: 'btn-inverted', onClick: onClose },
       ]}>
 

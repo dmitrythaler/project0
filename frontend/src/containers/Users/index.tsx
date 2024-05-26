@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useAppSelector, useAppDispatch, SessionActions, UsersActions } from '@storage'
+import { useAppSelector, useAppDispatch, SessionState, UsersState } from '@storage'
 import UsersTable from '@components/UsersTable'
 import UserModal from '@components/UserModal'
 import Modal from '@components/Modal'
@@ -15,17 +15,14 @@ import RefreshIcon from '../../assets/feather.inline.icons/refresh-cw.svg'
 
  //  ---------------------------------
 
-const defaultUser = (): User.Self => ({
-  _id: '',
+const defaultUser = (): User => ({
+  // _id: '',
   email: '',
-  lastName: '',
-  firstName: '',
+  fullName: '',
   password: '',
   isActive: true,
-  role: 'User',
+  role: 'User:Manager',
   createdAt: new Date(),
-  updatedAt: null,
-  lastLogin: null
 })
 
  //  ---------------------------------
@@ -38,10 +35,10 @@ const defaultUser = (): User.Self => ({
 
   const dispatch = useAppDispatch()
 
-  const usersLoading = useAppSelector(UsersActions.isProcessing)
-  const users = useAppSelector(UsersActions.getUsers)
+  const usersLoading = useAppSelector(UsersState.isProcessing)
+  const users = useAppSelector(UsersState.getUsers)
 
-  const currUser = useAppSelector(SessionActions.getUser)
+  const currUser = useAppSelector(SessionState.getUser)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -52,7 +49,7 @@ const defaultUser = (): User.Self => ({
 
   useEffect(() => {
     if (currUser && currUser.role === 'Admin') {
-      dispatch(UsersActions.fetchUsersAction())
+      dispatch(UsersState.fetchUsers())
     }
   }, [])
 
@@ -74,15 +71,15 @@ const defaultUser = (): User.Self => ({
 
   const onUserSave = (dataFromModal) => {
     if (user._id) {
-      dispatch(UsersActions.updateUserAction(dataFromModal))
+      dispatch(UsersState.updateUserAction(dataFromModal))
     } else {
-      dispatch(UsersActions.createUserAction(dataFromModal))
+      dispatch(UsersState.createUserAction(dataFromModal))
     }
     showUserModal(false)
   }
 
   const onUserDelete = () => {
-    dispatch(UsersActions.deleteUserAction(user))
+    dispatch(UsersState.deleteUserAction(user))
     showDeleteDialog(false)
   }
 
@@ -94,7 +91,7 @@ const defaultUser = (): User.Self => ({
         <button type="button" className="btn btn-accent pl-2" onClick={onNewUser}>
           <PlusIcon className="icon h-10 w-10 p-1 inline-block" /> <div className="inline-block">Add new user</div>
         </button>
-        <button className="btn btn-inverted ml-4 p-2" onClick={() => dispatch(UsersActions.fetchUsersAction())}>
+        <button className="btn btn-inverted ml-4 p-2" onClick={() => dispatch(UsersState.fetchUsers())}>
           <RefreshIcon className={`icon h-10 w-10 p-1 ${(usersLoading && 'animate-spin') || ''}`}/>
         </button>
       </div>
@@ -127,7 +124,7 @@ const defaultUser = (): User.Self => ({
           { caption: 'Yes, I am sure', className: 'btn-accent', onClick: onUserDelete },
           { caption: 'Cancel', className: 'btn-inverted', onClick: () => showDeleteDialog(false) },
         ]}>
-        <p>You are going to delete user <span className="font-bold">"{user.firstName} {user.lastName}"</span> !</p>
+        <p>You are going to delete user <span className="font-bold">"{user.fullName}"</span> !</p>
       </Modal>
 
     </React.Fragment>

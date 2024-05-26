@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useAppSelector, useAppDispatch, SessionActions, MediaActions } from '@storage'
+import { useAppSelector, useAppDispatch, SessionState, MediaState } from '@storage'
 import MediaTable from '@components/MediaTable'
 import MediaModal from '@components/MediaModal'
 import MediaModalUpdate from '@components/MediaModalUpdate'
@@ -15,7 +15,7 @@ import PlusIcon from '../../assets/feather.inline.icons/plus-square.svg'
 import RefreshIcon from '../../assets/feather.inline.icons/refresh-cw.svg'
 
 // TODO: move defaults to storage (?)
-const defaultMedia = (): Media.Self => ({
+const defaultMedia = (): Media => ({
   fileName: '',
   fileSize: 0,
   height: 0,
@@ -36,10 +36,10 @@ const defaultMedia = (): Media.Self => ({
 
   const dispatch = useAppDispatch()
 
-  const mediaLoading = useAppSelector(MediaActions.isLoading)
-  const mediaList = useAppSelector(MediaActions.getMedia)
+  const mediaLoading = useAppSelector(MediaState.isProcessing)
+  const mediaList = useAppSelector(MediaState.getMedia)
 
-  const currUser = useAppSelector(SessionActions.getUser)
+  const currUser = useAppSelector(SessionState.getUser)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const defaultMedia = (): Media.Self => ({
 
   useEffect(() => {
     if (currUser) {
-      dispatch(MediaActions.fetchMediaAction())
+      dispatch(MediaState.fetchMediaAction())
     }
   }, [])
 
@@ -71,17 +71,17 @@ const defaultMedia = (): Media.Self => ({
   }
 
   const onMediaUpload = (dataFromModal) => {
-    dispatch(MediaActions.uploadMediaAction(dataFromModal))
+    dispatch(MediaState.uploadMediaAction(dataFromModal))
     showMediaModal(false)
   }
 
   const onMediaUpdate = (dataFromModal) => {
-    dispatch(MediaActions.updateMediaAction(dataFromModal))
+    dispatch(MediaState.updateMediaAction(dataFromModal))
     showMediaModalUpdate(false)
   }
 
   const onMediaDelete = () => {
-    dispatch(MediaActions.deleteMediaAction(media))
+    dispatch(MediaState.deleteMediaAction(media))
     showDeleteDialog(false)
   }
 
@@ -93,7 +93,7 @@ const defaultMedia = (): Media.Self => ({
         <button type="button" className="btn btn-accent pl-2" onClick={onNewMedia}>
           <PlusIcon className="icon h-10 w-10 p-1 inline-block" /> <div className="inline-block">Upload new media</div>
         </button>
-        <button className="btn btn-inverted ml-4 p-2" onClick={() => dispatch(MediaActions.fetchMediaAction())}>
+        <button className="btn btn-inverted ml-4 p-2" onClick={() => dispatch(MediaState.fetchMediaAction())}>
           <RefreshIcon className={`icon h-10 w-10 p-1 ${(mediaLoading && 'animate-spin') || ''}`}/>
         </button>
       </div>

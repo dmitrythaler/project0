@@ -31,7 +31,7 @@ export default function({ users, onAction, adminMode, className = ''}) {
             const lastLogin = (user.lastLogin && user.lastLogin.replace('T', ' ').slice(0, -5)) || 'never'
             return (<tr className="border-t subtle-border" key={user._id}>
               <td className="py-2 px-4 font-bold">{user.email}</td>
-              <td className="py-2 px-4">{user.firstName} {user.lastName}</td>
+              <td className="py-2 px-4">{user.fullName}</td>
               <td className="py-2 px-4 text-center">{user.role}</td>
               <td className="py-2 px-4 text-center">{lastLogin}</td>
               <td className="py-2 px-4 text-center">{user.isActive

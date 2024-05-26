@@ -1,58 +1,54 @@
+import { createReducer, createAction } from '@reduxjs/toolkit'
 import {
-  STATUS_BRANCH as BRANCH,
   STATUS_FETCH,
   STATUS_LOADED,
   STATUS_ERROR
- } from '@p0/common/constants'
+} from '@p0/common/constants'
 
-import type { AnyAction } from 'redux'
-import type { IAPIError, AppStatus } from '@common/types'
+import type * as RT from '@reduxjs/toolkit'
+import type { IAPIError, AppStatus } from '@p0/common/types'
 
-//  ----------------------------------------------------------------------------------------------//
-
+//  ---------------------------------
+// types
 export type AppStatusData = {
   status: AppStatus
   processing: boolean
   error?: IAPIError
 }
 
-//  ----------------------------------------------------------------------------------------------//
-//  redicer
+// actions
+export const statusLoadingStartedAction = createAction(STATUS_FETCH)
+export const statusLoadedAction = createAction<AppStatus>(STATUS_LOADED)
+export const statusErrorAction = createAction<IAPIError>(STATUS_ERROR)
 
-const initialStatus: AppStatusData = {
-  status: {
-    desc: '',
-    version: '',
-    env: '',
-    hash: '',
-    db: '',
-  },
-  processing: false,
-}
+// reducer
 
-export const reducer = (state = initialStatus, action: AnyAction): AppStatusData => {
-  switch (action.type) {
-    case STATUS_FETCH: {
-      state = { ...state }
+const statusReducer: RT.Reducer = createReducer(
+  {
+    status: {
+      desc: '',
+      version: '',
+      env: '',
+      hash: '',
+      db: '',
+    },
+    processing: false,
+  } as AppStatusData,
+  (builder) => {
+    builder.addCase(statusLoadingStartedAction, (state, action) => {
       state.processing = true
-      return state
-    }
-
-    case STATUS_LOADED: {
-      return {
-        status: action.payload,
-        processing: false
-      }
-    }
-
-    case STATUS_ERROR: {
-      state = { ...state }
+    })
+    builder.addCase(statusLoadedAction, (state, action) => {
+      state.processing = false
+      state.status = action.payload
+      state.error = undefined
+    })
+    builder.addCase(statusErrorAction, (state, action) => {
       state.processing = false
       state.error = action.payload
-      return state
-    }
+    })
 
-    default:
-      return state
   }
-}
+)
+
+export default statusReducer

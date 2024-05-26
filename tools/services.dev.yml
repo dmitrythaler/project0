@@ -23,16 +23,15 @@ services:
       API_PORT: ${API_PORT}
       WS_PORT: ${WS_PORT}
       DEBUG_PORT: ${DEBUG_PORT}
-      LOG: dal,http,wss,minio
-      MINIO_ENDPOINT: storage
-      MINIO_REGION: eu-west-2
-      MINIO_BUCKET: 'project0'
-      MINIO_ROOT_USER: root
-      MINIO_ROOT_PASSWORD:
+      LOG: dal,http,aws
+      AWS_ENDPOINT: 'http://storage:9000'
+      AWS_ACCESS_KEY_ID: root
+      AWS_SECRET_ACCESS_KEY:
+      AWS_REGION: eu-west-2
       # database
       DB_HOST: mongo
       DB_PORT: ${DB_PORT}
-      DB_NAME: project-zero
+      DB_NAME: p0
       # keep values in secrets.dev.yml
       API_PRIVATE_KEY:
       API_PUBLIC_KEY:

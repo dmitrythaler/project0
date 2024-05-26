@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation } from "react-router-dom"
 
-import { useAppSelector, useAppDispatch, ThemeActions } from '@storage'
+import { useAppSelector, useAppDispatch, ThemeState } from '@storage'
 
 // @ts-ignore
 import ProjectLogo from '../../assets/feather.inline.icons/book-open.svg'
@@ -24,18 +24,18 @@ export default function ({ currUser }) {
 
   const dispatch = useAppDispatch()
   const { pathname } = useLocation()
-  const theme = useAppSelector(ThemeActions.getTheme)
+  const theme = useAppSelector(ThemeState.getTheme)
   const [themeMenuVisible, showThemeMenu] = useState(false)
 
   //  ---------------------------------
   let leaveTimeout: NodeJS.Timeout|number = 0
 
-  const themeSetter = () => {
-    dispatch(ThemeActions.changeThemeAction(theme.theme === 'light' ? 'dark' : 'light'))
+    const themeSetter = () => {
+    dispatch(ThemeState.themeChangeAction(theme.theme === 'light' ? 'dark' : 'light'))
   }
 
   const accentSetter = newAccent => {
-    dispatch(ThemeActions.changeAccentAction(newAccent))
+    dispatch(ThemeState.accentChangeAction(newAccent))
   }
 
   const leaveHandler = e => {

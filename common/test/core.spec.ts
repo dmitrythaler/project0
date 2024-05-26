@@ -1,6 +1,6 @@
+import { describe, it } from "node:test"
 import assert from 'assert'
-import * as core from '../index'
-
+import * as core from '../index.ts'
 
 describe('Core usage suite', () => {
 

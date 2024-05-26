@@ -1,70 +1,72 @@
-import { extname } from 'node:path'
 import {
-  APIError,
   logger,
-  MEDIA_UPLOADED,
-  MEDIA_UPDATED,
-  MEDIA_DELETED
+  assertPermissions,
+  createRBACFilter,
+  makeBrandedValue
 } from '@p0/common'
 
 import { getDAL } from '@p0/dal'
 import { ensureUser } from '../core/index.ts'
-import { getWss } from '../services/wss.ts'
-import { getMinio } from '../services/minio.ts'
+import { getS3 } from '../services/aws-s3.ts'
 
 import type { RequestExt } from '../core/index.ts'
-import type { Media } from '@p0/dal'
+import type { Media, MediaFile, MediaList } from '@p0/dal'
+import type { MediaID, OrgID } from '@p0/common/types'
 
 //  ---------------------------------
 
-const getMediaName = (m: Media.Self): string => m._id
-  ? (m.slug
-    ? `${m._id}-${m.slug}.${m.ext}`
-    : `${m._id}.${m.ext}`)
-  : ''
+// TODO: FIXME: the Bucket name must be based on the orgId/Name
+// this is temporary solution
+const _bucketName = 'p0'
 
-export const getMediaList = async ({ ctx }: RequestExt): Promise<{ media: Media.Self[] }> => {
+export const getMediaList = async ({ ctx }: RequestExt): Promise<MediaList> => {
   const currUser = ensureUser(ctx)
-  if (currUser.role !== 'Admin') {
-    const media = await getDAL().getMediaDAL().getList(currUser._id as string)
-    return { media }
+  const filter = createRBACFilter(currUser, 'Media')
+  if (filter === false) {
+    return { data: [], meta: { total: 0 } }
   }
-  const media = await getDAL().getMediaDAL().getList()
-  return { media }
+  if (filter === true) {
+    return getDAL().getMediaDAL().getList()
+  }
+  return getDAL().getMediaDAL().getList({ filter })
 }
 
-export const getMediaById = async ({ ctx, params }: RequestExt): Promise<{ media: Media.Self }> => {
+export const getMediaById = async ({ ctx, params }: RequestExt): Promise<{ media: Media }> => {
   const currUser = ensureUser(ctx)
-  const mediaId = params.id
-  const ownerId = currUser.role !== 'Admin' ? null : <string>currUser._id
-  const media = await getDAL().getMediaDAL().getById(ownerId, mediaId)
+  const media = await getDAL().getMediaDAL().getById(makeBrandedValue<MediaID>(params.id))
+  assertPermissions(currUser, 'Media:Get', media)
   return { media }
 }
 
 export const postCreateMedia = async ({ ctx, body }: RequestExt)
   : Promise<{ _ids: string[], presignedUrls: string[] }> => {
   const currUser = ensureUser(ctx)
+  const { slug, files, orgId } = body.data as { slug: string, files: MediaFile[], orgId: OrgID }
 
-  const { slug, files } = body.data as { slug: string, files: Media.SelfFile[] }
-  const records = await getDAL().getMediaDAL().storeMediaData(<string>currUser._id, files, <string>slug)
+  // TODO: check permissions and correctness of the orgId
+  assertPermissions(currUser, 'Media:Create', {
+    // pseudo entity to check Permissions
+    _id: '' as MediaID, // it doesn't matter
+    type: 'Media',
+    orgId,
+    ownerId: currUser._id
+  })
+
+  const mediaDAL = getDAL().getMediaDAL()
+  const records = await mediaDAL.storeMediaData(files, currUser._id, orgId, slug)
+
+  // create presigned URLs to upload files right from F/E
   const bucketFiles = records.map(getMediaName)
+  const s3 = await getS3()
 
-  const minio = await getMinio()
-  const getPresignedUrls = bucketFiles.map(fileName => minio.presignedPutObjectUrl(fileName, 60))
+  // TODO: FIXME: the Bucket name must be based on the orgId/Name
+  const getPresignedUrls = bucketFiles.map(fileName => s3.getPresignedUrl(_bucketName, fileName, 60))
   const presignedUrls = await Promise.all(getPresignedUrls)
 
   records.forEach((record, idx) => {
     record.storagePath = bucketFiles[idx]
   });
-  await getDAL().getMediaDAL().updateMediaStoragePath(<string>currUser._id, records)
-
-  getWss().broadcast({
-    type: MEDIA_UPLOADED,
-    payload: {
-      actorId: currUser._id,
-      count: records.length
-    }
-  })
+  await mediaDAL.updateMediaStoragePath(records)
 
   return {
     _ids: records.map(r => r._id!),
@@ -74,68 +76,61 @@ export const postCreateMedia = async ({ ctx, body }: RequestExt)
 
 export const patchUpdateMedia = async ({ ctx, body }: RequestExt): Promise<{ count: number }> => {
   const currUser = ensureUser(ctx)
-  const { _id, slug, newSlug, updateAllSlugs } = body.data
-  if (!newSlug) {
-    logger.error('Insufficient data provided', body.data)
-    throw new APIError(400, 'Insufficient data provided')
-  }
+  const { _id, newSlug, updateAllSlugs }: {
+    _id: MediaID,
+    slug: string,
+    newSlug: string,
+    updateAllSlugs: boolean
+  } = body.data
 
-  let count
-  if (slug && updateAllSlugs) {
-    count = await getDAL().getMediaDAL().updateAllMediaWithSlug(<string>currUser._id, slug, newSlug)
-  } else if ( _id ) {
-    count = await getDAL().getMediaDAL().updateMedia(<string>currUser._id, _id, newSlug)
+  let count: number
+  const mediaDAL = getDAL().getMediaDAL()
+  const media = await mediaDAL.getById(_id)
+
+  assertPermissions(currUser, 'Media:Update', media)
+
+  if (updateAllSlugs) {
+    // TODO: good place for optimization, updateAllMediaWithSlug will get the media by _id again to know orgId
+    count = await mediaDAL.updateAllMediaWithSlug(_id, newSlug)
   } else {
-    logger.error('Insufficient data provided', body.data)
-    throw new APIError(400, 'Insufficient data provided')
+    count = await mediaDAL.updateMedia(_id, newSlug)
   }
-
-  getWss().broadcast({
-    type: MEDIA_UPDATED,
-    payload: {
-      actorId: currUser._id,
-      count
-    }
-  })
 
   return { count }
 }
 
 export const deleteMedia = async ({ ctx, params }: RequestExt): Promise<{}> => {
   const currUser = ensureUser(ctx)
-  const mediaId = params.id
-  const ownerId = currUser.role !== 'Admin' ? <string>currUser._id : null
-  const media = await getDAL().getMediaDAL().delete(ownerId, mediaId)
-  const minio = await getMinio()
-  await minio.removeObject(media.storagePath!)
+  const mediaId = makeBrandedValue<MediaID>(params.id)
+  const mediaDAL = getDAL().getMediaDAL()
+  const media = await mediaDAL.getById(mediaId)
 
-  getWss().broadcast({
-    type: MEDIA_DELETED,
-    payload: {
-      actorId: currUser._id,
-      mediaId: mediaId
-    }
-  })
+  assertPermissions(currUser, 'Media:Delete', media)
+  await mediaDAL.delete(mediaId)
+
+  const s3 = await getS3()
+  // TODO: FIXME: the Bucket name must be based on the orgId/Name
+  await s3.deleteObject(_bucketName, media.storagePath!)
+
   return {}
 }
 
+// TODO: assertPermissions :
+// NOTE: this method needed only to undo creation (in case F/E files uploads went wrong)
+// so it's not clear how to check permissions and do they need to be checked at all
 export const patchUndoCreateMedia = async ({ ctx, body }: RequestExt): Promise<{ count: number }> => {
-  const currUser = ensureUser(ctx)
-  const { _ids } = body.data
+  /* const currUser =  */ensureUser(ctx)
+  const { _ids }: { _ids: MediaID[] } = body.data
 
   logger.info('+++ patchUndoCreateMedia', body)
 
   const count = _ids.length
-  await getDAL().getMediaDAL().deleteMany(<string>currUser._id, _ids)
-
-  getWss().broadcast({
-    type: MEDIA_DELETED,
-    payload: {
-      actorId: currUser._id,
-      count
-    }
-  })
+  await getDAL().getMediaDAL().deleteMany(_ids)
   return { count }
 }
 
-
+const getMediaName = (m: Media): string => m._id
+  ? (m.slug
+    ? `${m._id}-${m.slug}.${m.ext}`
+    : `${m._id}.${m.ext}`)
+  : ''

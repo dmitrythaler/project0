@@ -15,10 +15,11 @@ export type ConnConfig = {
   database: string
   user?: string
   passwd?: string
+  migrate?: boolean
 }
 
 export interface DatabaseClient {
-  setupCollection: (colanme: string, def: IndexDefinition[]) => Promise<void>;
+  setupCollection: (collName: string, def: IndexDefinition[]) => Promise<void>;
   getDb: () => Promise<M.Db>;
   close: () => Promise<void>;
 }
